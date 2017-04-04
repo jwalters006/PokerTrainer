@@ -2,9 +2,6 @@ package com.rallymonkey911.android.pokertrainer;
 
 import android.content.Context;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Deck is a multidimensional array consisting of {@link Card} objects.
  * Created by jeff on 3/24/2017.
@@ -78,49 +75,4 @@ public class Deck {
     public Card getCard(int suit, int rank) {
         return cards[suit-1][rank-1];
     }
-
-    /**
-     * Return a {@link ArrayList} of Card objects, constructed using a {@link Deck} of Cards
-     *
-     * @param deck The original source of the Card objects
-     * @return An ArrayList of Card objects retrieved from the Deck
-     */
-    public static List<List<Card>> getCardArrayList(Deck deck){
-        List<List<Card>> cardArrayList = new ArrayList<>();
-        List<Card> diamondsArrayList = new ArrayList<>();
-        List<Card> heartsArrayList = new ArrayList<>();
-        List<Card> clubsArrayList = new ArrayList<>();
-        List<Card> spadesArrayList = new ArrayList<>();
-
-        for (int suit = Card.DIAMONDS; suit <= Card.DIAMONDS; suit++) {
-            for (int rank = Card.ACE; rank <= Card.KING; rank++) {
-                diamondsArrayList.add(deck.getCard(suit, rank));
-            }
-        }
-
-        for (int suit = Card.HEARTS; suit <= Card.HEARTS; suit++) {
-            for (int rank = Card.ACE; rank <= Card.KING; rank++) {
-                heartsArrayList.add(deck.getCard(suit, rank));
-            }
-        }
-
-        for (int suit = Card.CLUBS; suit <= Card.CLUBS; suit++) {
-            for (int rank = Card.ACE; rank <= Card.KING; rank++) {
-                clubsArrayList.add(deck.getCard(suit, rank));
-            }
-        }
-
-        for (int suit = Card.SPADES; suit <= Card.SPADES; suit++) {
-            for (int rank = Card.ACE; rank <= Card.KING; rank++) {
-                spadesArrayList.add(deck.getCard(suit, rank));
-            }
-        }
-
-        cardArrayList.add(diamondsArrayList);
-        cardArrayList.add(heartsArrayList);
-        cardArrayList.add(clubsArrayList);
-        cardArrayList.add(spadesArrayList);
-        return cardArrayList;
-    }
-
 }

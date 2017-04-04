@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context="com.rallymonkey911.android.pokertrainer.MainActivity">
 
     <TextView
@@ -23,65 +23,411 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/sample_text"
-        android:layout_centerInParent="false"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/card_one"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="@dimen/card_height"
             android:layout_marginLeft="@dimen/horizontal_spacing"
             android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
             android:contentDescription="@string/card_image" />
 
         <ImageView
             android:id="@+id/card_two"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="@dimen/card_height"
             android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
             android:contentDescription="@string/card_image" />
 
         <ImageView
             android:id="@+id/card_three"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="@dimen/card_height"
             android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
             android:contentDescription="@string/card_image" />
 
         <ImageView
             android:id="@+id/card_four"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="@dimen/card_height"
             android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
             android:contentDescription="@string/card_image" />
 
         <ImageView
             android:id="@+id/card_five"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="@dimen/card_height"
             android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
             android:contentDescription="@string/card_image" />
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/list"
+    <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/card_hand" />
+        android:layout_below="@id/card_hand">
 
-    <Button
-        android:id="@+id/clear_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/list"
-        android:layout_centerHorizontal="true"
-        android:text="@string/clear_button_text" />
+        <LinearLayout
+            android:id="@+id/rows_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/diamonds_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/ace_diamonds"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/deuce_diamonds"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/three_diamonds"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/four_diamonds"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/five_diamonds"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/six_diamonds"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/seven_diamonds"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/eight_diamonds"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/nine_diamonds"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/ten_diamonds"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/jack_diamonds"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/queen_diamonds"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/king_diamonds"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/hearts_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/ace_hearts"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/deuce_hearts"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/three_hearts"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/four_hearts"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/five_hearts"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/six_hearts"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/seven_hearts"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/eight_hearts"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/nine_hearts"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/ten_hearts"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/jack_hearts"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/queen_hearts"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/king_hearts"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/clubs_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/ace_clubs"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/deuce_clubs"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/three_clubs"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/four_clubs"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/five_clubs"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/six_clubs"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/seven_clubs"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/eight_clubs"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/nine_clubs"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/ten_clubs"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/jack_clubs"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/queen_clubs"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/king_clubs"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/spades_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/ace_spades"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/deuce_spades"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/three_spades"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/four_spades"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/five_spades"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/six_spades"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/seven_spades"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/eight_spades"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/nine_spades"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/ten_spades"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/jack_spades"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/queen_spades"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/king_spades"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/card_height_small"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/clear_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="@string/clear_button_text" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </RelativeLayout>
-
