@@ -1,6 +1,7 @@
 package com.rallymonkey911.android.pokertrainer;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     deuceSpadesImageView, threeSpadesImageView, fourSpadesImageView, fiveSpadesImageView,
     sixSpadesImageView, sevenSpadesImageView, eightSpadesImageView, nineSpadesImageView,
     tenSpadesImageView, jackSpadesImageView, queenSpadesImageView, kingSpadesImageView;
+
+
 
     public TextView sampleText;
     public Button clearButton;
@@ -111,9 +114,6 @@ public class MainActivity extends AppCompatActivity {
 
         clearButton = (Button)findViewById(R.id.clear_button);
 
-        ImageView[] cardSlotImageViews = {cardImageView1, cardImageView2, cardImageView3,
-                cardImageView4, cardImageView5};
-
         ImageView[] diamondImageViews = {aceDiamondsImageView, deuceDiamondsImageView,
                 threeDiamondsImageView, fourDiamondsImageView, fiveDiamondsImageView,
                 sixDiamondsImageView, sevenDiamondsImageView, eightDiamondsImageView,
@@ -133,21 +133,16 @@ public class MainActivity extends AppCompatActivity {
                 sevenSpadesImageView, eightSpadesImageView, nineSpadesImageView, tenSpadesImageView,
                 jackSpadesImageView, queenSpadesImageView, kingSpadesImageView};
 
+        ImageView[][] allImageViews = new ImageView[4][13];
+        System.arraycopy(diamondImageViews, 0, allImageViews[0], 0, diamondImageViews.length);
+        System.arraycopy(heartsImageViews, 0, allImageViews[1], 0, heartsImageViews.length);
+        System.arraycopy(clubsImageViews, 0, allImageViews[2], 0, clubsImageViews.length);
+        System.arraycopy(spadesImageViews, 0, allImageViews[3], 0, spadesImageViews.length);
 
-        for (int i = 0; i < 13; i++){
-            diamondImageViews[i].setImageResource(deck.getCard(1, i+1).getmResourceId());
-        }
-
-        for (int i = 0; i < 13; i++){
-            heartsImageViews[i].setImageResource(deck.getCard(2, i+1).getmResourceId());
-        }
-
-        for (int i = 0; i < 13; i++){
-            clubsImageViews[i].setImageResource(deck.getCard(3, i+1).getmResourceId());
-        }
-
-        for (int i = 0; i < 13; i++){
-            spadesImageViews[i].setImageResource(deck.getCard(4, i+1).getmResourceId());
+        for (int i = 0; i < 4; i++){
+            for (int j = 0; j < 13; j++){
+                allImageViews[i][j].setImageResource(deck.getCard((i+1), (j+1)).getmResourceId());
+            }
         }
 
         // Define the OnClickListener for the five ImageViews representing the current hand
@@ -155,83 +150,36 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ImageView handCardImage = (ImageView) v;
-                if (handCardImage.getDrawable().getConstantState() !=
-                        getResources().getDrawable(R.drawable.blank_small_version)
-                                .getConstantState()){
+                if (!isBlank(handCardImage)){
                     Card card = (Card) handCardImage.getTag();
                     removeCardFromHand(card);
                 }
             }
         };
 
-        // Set the five hand ImageView's as invisible, and set their OnClickListeners
-        for (ImageView blankImageView : cardSlotImageViews){
-            blankImageView.setImageResource(R.drawable.blank_small_version);
+        // Set the five hand ImageView's as blank cards, and set their OnClickListeners
+        for (ImageView blankImageView : new ImageView[]{cardImageView1, cardImageView2,
+                cardImageView3, cardImageView4, cardImageView5}){
+            setBlank(blankImageView);
             blankImageView.setOnClickListener(handClickListener);
         }
 
-        for (int i = 0; i < 13; i++){
-            final Card currentCard = deck.getCard(1, i+1);
-            ImageView currentImageView = diamondImageViews[i];
-            currentImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!hand.contains(currentCard)){
-                        addCardToHand(currentCard);
-                    } else {
-                        Toast.makeText(getApplication(), "Card already in hand",
-                                Toast.LENGTH_SHORT).show();
+        for (int i = 0; i < 4; i++){
+            for (int j = 0; j < 13; j++){
+                final Card currentCard = deck.getCard((i+1), (j+1));
+                ImageView currentImageView = allImageViews[i][j];
+                currentImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!hand.contains(currentCard)){
+                            addCardToHand(currentCard);
+                        } else {
+                            Toast.makeText(getApplication(), R.string.card_already_selected,
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
-            });
-        }
-
-        for (int i = 0; i < 13; i++){
-            final Card currentCard = deck.getCard(2, i+1);
-            ImageView currentImageView = heartsImageViews[i];
-            currentImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!hand.contains(currentCard)){
-                        addCardToHand(currentCard);
-                    } else {
-                        Toast.makeText(getApplication(), "Card already in hand",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        }
-
-        for (int i = 0; i < 13; i++){
-            final Card currentCard = deck.getCard(3, i+1);
-            ImageView currentImageView = clubsImageViews[i];
-            currentImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!hand.contains(currentCard)){
-                        addCardToHand(currentCard);
-                    } else {
-                        Toast.makeText(getApplication(), "Card already in hand",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        }
-
-        for (int i = 0; i < 13; i++){
-            final Card currentCard = deck.getCard(4, i+1);
-            ImageView currentImageView = spadesImageViews[i];
-            currentImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!hand.contains(currentCard)){
-                        addCardToHand(currentCard);
-                    } else {
-                        Toast.makeText(getApplication(), "Card already in hand",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+                });
+            }
         }
 
         clearButton.setOnClickListener(new View.OnClickListener() {
@@ -245,90 +193,62 @@ public class MainActivity extends AppCompatActivity {
     public boolean addCardToHand(Card cardToAdd){
         if (hand.size() <= 4){
             hand.add(cardToAdd);
-            if (isBlank(cardImageView1)){
-                cardImageView1.setImageResource(cardToAdd.getmResourceId());
-                cardImageView1.setTag(cardToAdd);
-            } else if (isBlank(cardImageView2)){
-                cardImageView2.setImageResource(cardToAdd.getmResourceId());
-                cardImageView2.setTag(cardToAdd);
-            } else if (isBlank(cardImageView3)){
-                cardImageView3.setImageResource(cardToAdd.getmResourceId());
-                cardImageView3.setTag(cardToAdd);
-            } else if (isBlank(cardImageView4)){
-                cardImageView4.setImageResource(cardToAdd.getmResourceId());
-                cardImageView4.setTag(cardToAdd);
-            } else {
-                cardImageView5.setImageResource(cardToAdd.getmResourceId());
-                cardImageView5.setTag(cardToAdd);
+            for (ImageView cardImageView : new ImageView[]{cardImageView1,cardImageView2,
+                    cardImageView3,cardImageView4,cardImageView5}){
+                if (isBlank(cardImageView)){
+                    cardImageView.setImageResource(cardToAdd.getmResourceId());
+                    cardImageView.setTag(cardToAdd);
+                    setSampleText();
+                    return true;
+                }
             }
-            setSampleText();
-            return true;
         } else {
-            Toast.makeText(getApplication(), "Hand is full.  To discard," +
-                            " select from amongst the 5-card hand",
+            Toast.makeText(getApplication(), R.string.hand_full,
                     Toast.LENGTH_SHORT).show();
-            return false;
         }
+        return false;
     }
 
-    public boolean removeCardFromHand(Card cardToRemove){
-        if (isImageViewMatch(cardToRemove, cardImageView1)){
-            setBlank(cardImageView1);
-        } else if (isImageViewMatch(cardToRemove, cardImageView2)){
-            setBlank(cardImageView2);
-        } else if (isImageViewMatch(cardToRemove, cardImageView3)){
-            setBlank(cardImageView3);
-        } else if (isImageViewMatch(cardToRemove, cardImageView4)){
-            setBlank(cardImageView4);
-        } else if (isImageViewMatch(cardToRemove, cardImageView5)){
-            setBlank(cardImageView5);
+    public void removeCardFromHand(Card cardToRemove){
+        for (ImageView cardImageView : new ImageView[]{cardImageView1, cardImageView2,
+                cardImageView3, cardImageView4, cardImageView5}){
+            if (isImageViewMatch(cardToRemove, cardImageView)){
+                setBlank(cardImageView);
+                setSampleText();
+                hand.remove(cardToRemove);
+                return;
+            }
         }
-        else{return false;}
-        setSampleText();
-        return hand.remove(cardToRemove);
     }
 
     public void setSampleText(){
         int count = 0;
-        if (!isBlank(cardImageView1)){
-            count++;
-        }
-        if (!isBlank(cardImageView2)){
-            count++;
-        }
-        if (!isBlank(cardImageView3)) {
-            count++;
-        }
-        if (!isBlank(cardImageView4)) {
-            count++;
-        }
-        if (!isBlank(cardImageView5)) {
-            count++;
-        }
-        if (count == 1){
-            sampleText.setText("" + count + " card is selected");
-        } else if (count < 5 && count > 1) {
-            sampleText.setText("" + count + " cards are selected");
-        } else if (count == 5){
-            runCalculation();
-        } else {
-            sampleText.setText(R.string.select_cards);
+        for (ImageView cardImageView : new ImageView[]{cardImageView1, cardImageView2,
+                cardImageView3, cardImageView4, cardImageView5})
+        if (!isBlank(cardImageView)){count++;}
+
+        switch (count) {
+            case 0:     sampleText.setText(R.string.select_cards);
+                        break;
+            case 1:     sampleText.setText(getString(R.string.card_selected_singular, count));
+                        break;
+            case 5:     runCalculation();
+                        break;
+            default:    sampleText.setText(getString(R.string.cards_selected_plural, count));
+                        break;
         }
     }
 
     public void clearHand(){
-        ImageView[] cardSlotImageViews = {cardImageView1, cardImageView2, cardImageView3,
-                cardImageView4, cardImageView5};
-        for (ImageView cardInHand : cardSlotImageViews){
-            cardInHand.setImageResource(R.drawable.blank_small_version);
-        }
+        for (ImageView cardImageView : new ImageView[]{cardImageView1, cardImageView2,
+                cardImageView3, cardImageView4, cardImageView5}){ setBlank(cardImageView); }
         hand.clear();
         setSampleText();
     }
 
     public boolean isBlank(ImageView image) {
-        return image.getDrawable().getConstantState() == getResources().
-                getDrawable(R.drawable.blank_small_version).getConstantState();
+        return image.getDrawable().getConstantState() == ContextCompat.getDrawable
+                (MainActivity.this, R.drawable.blank_small_version).getConstantState();
     }
 
     public void setBlank(ImageView image){
@@ -342,6 +262,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void runCalculation(){
-        sampleText.setText("RUNNING CALC...");
+        sampleText.setText(R.string.placeholder);
     }
 }

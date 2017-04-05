@@ -1,7 +1,16 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">PokerTrainer</string>
     <string name="card_image">Card Image</string>
     <string name="default_text">Select cards from below</string>
     <string name="clear_button_text">Clear</string>
     <string name="select_cards">Select cards from below</string>
+    <string name="card_already_selected">Card already in hand</string>
+    <string name="placeholder">Placeholder text</string>
+    <string name="hand_full">Hand is full. To discard, select from amongst the 5-card hand or press
+        the clear button</string>
+    <string name="card_selected_singular">
+        <xliff:g id="count" example="1">%d</xliff:g>
+        card is selected</string>
+    <string name="cards_selected_plural"><xliff:g id="count" example="2">%d</xliff:g>
+         cards are selected</string>
 </resources>

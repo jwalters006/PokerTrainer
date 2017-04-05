@@ -7,14 +7,14 @@ import android.content.Context;
  * Created by jeff on 3/24/2017.
  */
 
-public class Deck {
+class Deck {
 
     /** Declare and initialize the fixed number of suits and ranks in a deck */
-    public static final int NUM_SUITS = 4;
-    public static final int NUM_RANKS = 13;
+    private static final int NUM_SUITS = 4;
+    private static final int NUM_RANKS = 13;
 
     /** Declare and initialize the directory portion of the file path to the card images */
-    public static final String RES_FILE_PATH = "drawable/";
+    private static final String RES_FILE_PATH = "drawable/";
 
     /** Declare a multidimensional array of {@link Card} objects */
     private Card[][] cards;
@@ -25,7 +25,7 @@ public class Deck {
      * addition, each Card object is assigned a resource ID (referring to a .PNG image file).
      * @param context The current context ({@link MainActivity})
      */
-    public Deck(Context context) {
+    Deck(Context context) {
 
         cards = new Card[NUM_SUITS][NUM_RANKS];
         for (int suit = Card.DIAMONDS; suit <= Card.SPADES; suit++) {
@@ -46,7 +46,7 @@ public class Deck {
      * @return The rest of the path to the Card's image file (first part of the path is given in
      * the constant, "RES_FILE_PATH".
      */
-    public String getCardFileName(int suit, int rank){
+    private String getCardFileName(int suit, int rank){
         String suitAsString;
         String rankAsString = "" + rank;
         String separator = "_";
@@ -72,7 +72,7 @@ public class Deck {
      * @param rank of the requested card
      * @return the requested {@link Card}
      */
-    public Card getCard(int suit, int rank) {
+    Card getCard(int suit, int rank) {
         return cards[suit-1][rank-1];
     }
 }
