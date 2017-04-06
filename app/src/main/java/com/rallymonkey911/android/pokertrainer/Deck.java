@@ -31,7 +31,7 @@ class Deck {
         for (int suit = Card.DIAMONDS; suit <= Card.SPADES; suit++) {
             for (int rank = Card.ACE; rank <= Card.KING; rank++) {
                 int resId = context.getResources().getIdentifier(RES_FILE_PATH +
-                                getCardFileName(suit, rank) + "_small_version", null,
+                                getCardFileName(suit, rank) + "_cropped", null,
                                 context.getPackageName());
                 cards[suit-1][rank-1] = new Card(rank, suit, resId);
             }
