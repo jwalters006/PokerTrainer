@@ -153,6 +153,27 @@ public class Card {
 
     @Override
     public String toString() {
+        String suitAsString;
+
+        switch (getmSuit()){
+            case 1:
+                suitAsString = "D";
+                break;
+            case 2:
+                suitAsString = "C";
+                break;
+            case 3:
+                suitAsString = "H";
+                break;
+            default:
+                suitAsString = "S";
+                break;
+        }
+
+        return "" + getmRank() + suitAsString;
+    }
+
+    public String toStringFullName(){
         return rankToString(getmRank()) + " of " + suitToString(getmSuit());
     }
 }

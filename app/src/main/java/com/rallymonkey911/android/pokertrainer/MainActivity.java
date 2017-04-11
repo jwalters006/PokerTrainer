@@ -262,6 +262,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void runCalculation(){
-        sampleText.setText(R.string.placeholder);
+        List<String> handString = Hand.handAsStringList(hand);
+
+        if (Hand.flush(handString) && (Hand.straight(Hand.cardRanks(handString)))){
+            sampleText.setText(R.string.straight_flush);
+        } else if (Hand.kind(4, Hand.cardRanks(handString)) != null) {
+                sampleText.setText(R.string.four_kind);
+        } else if (Hand.kind(3, Hand.cardRanks(handString)) != null &&
+                Hand.kind(2, Hand.cardRanks(handString)) != null) {
+            sampleText.setText(R.string.full_house);
+        } else if (Hand.flush(handString)) {
+            sampleText.setText(R.string.flush);
+        } else if (Hand.straight(Hand.cardRanks(handString))) {
+            sampleText.setText(R.string.straight);
+        } else if (Hand.kind(3, Hand.cardRanks(handString)) != null) {
+            sampleText.setText(R.string.three_kind);
+        } else if (Hand.twoPair(Hand.cardRanks(handString)) != null) {
+            sampleText.setText(R.string.two_pair);
+        } else {
+            sampleText.setText(handString.toString());
+        }
     }
 }

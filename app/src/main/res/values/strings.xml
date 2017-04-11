@@ -6,6 +6,13 @@
     <string name="select_cards">Select cards from below</string>
     <string name="card_already_selected">Card already in hand</string>
     <string name="placeholder">Placeholder text</string>
+    <string name="straight_flush">Straight Flush</string>
+    <string name="four_kind">Four of a kind</string>
+    <string name="three_kind">Three of a kind</string>
+    <string name="two_pair">Two pairs</string>
+    <string name="full_house">Full House</string>
+    <string name="straight">Straight</string>
+    <string name="flush">Flush</string>
     <string name="hand_full">Hand is full. To discard, select from amongst the 5-card hand or press
         the clear button</string>
     <string name="card_selected_singular">
