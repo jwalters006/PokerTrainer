@@ -141,7 +141,8 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < 4; i++){
             for (int j = 0; j < 13; j++){
-                allImageViews[i][j].setImageResource(deck.getCard((i+1), (j+1)).getmResourceId());
+                allImageViews[i][j].setImageResource(deck.getCard((i+1), (j+1)).
+                        getmResourceIdSmall());
             }
         }
 
@@ -196,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
             for (ImageView cardImageView : new ImageView[]{cardImageView1,cardImageView2,
                     cardImageView3,cardImageView4,cardImageView5}){
                 if (isBlank(cardImageView)){
-                    cardImageView.setImageResource(cardToAdd.getmResourceId());
+                    cardImageView.setImageResource(cardToAdd.getmResourceIdFull());
                     cardImageView.setTag(cardToAdd);
                     setSampleText();
                     return true;
@@ -256,8 +257,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean isImageViewMatch(Card card, ImageView imageView){
-        int cardResId = card.getmResourceId();
-        int imageViewResId = ((Card)imageView.getTag()).getmResourceId();
+        int cardResId = card.getmResourceIdFull();
+        int imageViewResId = ((Card)imageView.getTag()).getmResourceIdFull();
         return cardResId == imageViewResId;
     }
 

@@ -30,10 +30,13 @@ class Deck {
         cards = new Card[NUM_SUITS][NUM_RANKS];
         for (int suit = Card.DIAMONDS; suit <= Card.SPADES; suit++) {
             for (int rank = Card.ACE; rank <= Card.KING; rank++) {
-                int resId = context.getResources().getIdentifier(RES_FILE_PATH +
+                int resIdFull = context.getResources().getIdentifier(RES_FILE_PATH +
+                                getCardFileName(suit, rank) + "_small_version", null,
+                        context.getPackageName());
+                int resIdSmall = context.getResources().getIdentifier(RES_FILE_PATH +
                                 getCardFileName(suit, rank) + "_cropped", null,
                                 context.getPackageName());
-                cards[suit-1][rank-1] = new Card(rank, suit, resId);
+                cards[suit-1][rank-1] = new Card(rank, suit, resIdFull, resIdSmall);
             }
         }
     }

@@ -12,8 +12,11 @@ public class Card {
     /** The suit of the card (e.g., SPADES) */
     private final int mSuit;
 
-    /** Resource ID of the card's image file */
-    private int mResourceId;
+    /** Resource ID of the card's full image file */
+    private int mResourceIdFull;
+
+    /** Resource ID of the card's small image file */
+    private int mResourceIdSmall;
 
     /** Kinds of suits */
     final static int DIAMONDS    = 1;
@@ -45,12 +48,13 @@ public class Card {
      * @param suit is the card's suit
      * //@param resourceId is the resource identifier for the card's .PNG image file
      */
-    Card(int rank, int suit, int resourceId) {
+    Card(int rank, int suit, int resourceIdFull, int resourceIdSmall) {
         assert isValidRank(rank);
         assert isValidSuit(suit);
         mRank = rank;
         mSuit = suit;
-        mResourceId = resourceId;
+        mResourceIdFull = resourceIdFull;
+        mResourceIdSmall = resourceIdSmall;
     }
 
     /**
@@ -67,9 +71,15 @@ public class Card {
 
     /**
      *
-     * @return the resource ID of the card's image file
+     * @return the resource ID of the card's full image file
      */
-    int getmResourceId() {return mResourceId;}
+    int getmResourceIdFull() {return mResourceIdFull;}
+
+    /**
+     *
+     * @return the resource ID of the card's small image file
+     */
+    int getmResourceIdSmall() {return mResourceIdSmall;}
 
     /**
      * Check if the card's rank is valid
