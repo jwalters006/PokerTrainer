@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
             for (ImageView cardImageView : new ImageView[]{cardImageView1,cardImageView2,
                     cardImageView3,cardImageView4,cardImageView5}){
                 if (isBlank(cardImageView)){
-                    cardImageView.setImageResource(cardToAdd.getmResourceIdFull());
+                    cardImageView.setImageResource(cardToAdd.getmResourceIdSmall());
                     cardImageView.setTag(cardToAdd);
                     setSampleText();
                     return true;
@@ -257,8 +257,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean isImageViewMatch(Card card, ImageView imageView){
-        int cardResId = card.getmResourceIdFull();
-        int imageViewResId = ((Card)imageView.getTag()).getmResourceIdFull();
+        int cardResId = card.getmResourceIdSmall();
+        int imageViewResId = ((Card)imageView.getTag()).getmResourceIdSmall();
         return cardResId == imageViewResId;
     }
 
