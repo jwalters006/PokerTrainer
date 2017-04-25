@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     public Button clearButton;
     public List<Card> hand;
     Map map;
+    boolean holdAll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -320,6 +321,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void runCalculation() {
         List<String> handString = Hand.handAsStringList(hand);
+        holdAll = false;
 
         if (Hand.flush(handString) && (Hand.straight(Hand.cardRanks(handString)))) {
             handText.setText(R.string.straight_flush);
@@ -382,11 +384,22 @@ public class MainActivity extends AppCompatActivity {
 
         String[] resultCards = {cardA, cardB, cardC, cardD, cardE};
         for (String result : resultCards) {
-            if (result != null) {
+            if (result != null && !holdAll) {
                 for (int i = 0; i < 5; i++) {
+                    if (Hand.kind(4, Hand.cardRanks(handString)) != null ||
+                            Hand.kind(3, Hand.cardRanks(handString)) != null &&
+                                    Hand.kind(2, Hand.cardRanks(handString)) != null
+                            ) {
+                        for (TextView holdTextSlot : holdTextSlots) {
+                            holdTextSlot.setVisibility((View.VISIBLE));
+                        }
+                        holdAll = true;
+                        break;
+                    }
                     String compare = hand.get(i).toStringWithLetters();
                     if (result.equals(compare)) {
                         holdTextSlots[i].setVisibility(View.VISIBLE);
+                        break;
                     }
                 }
             }
