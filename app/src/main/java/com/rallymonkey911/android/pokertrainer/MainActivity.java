@@ -9,34 +9,61 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     public ImageView cardImageView1, cardImageView2, cardImageView3, cardImageView4, cardImageView5,
-    aceDiamondsImageView, deuceDiamondsImageView, threeDiamondsImageView, fourDiamondsImageView,
-    fiveDiamondsImageView, sixDiamondsImageView, sevenDiamondsImageView, eightDiamondsImageView,
-    nineDiamondsImageView, tenDiamondsImageView, jackDiamondsImageView, queenDiamondsImageView,
-    kingDiamondsImageView, aceHeartsImageView, deuceHeartsImageView, threeHeartsImageView,
-    fourHeartsImageView, fiveHeartsImageView, sixHeartsImageView, sevenHeartsImageView,
-    eightHeartsImageView, nineHeartsImageView, tenHeartsImageView, jackHeartsImageView,
-    queenHeartsImageView, kingHeartsImageView, aceClubsImageView, deuceClubsImageView,
-    threeClubsImageView, fourClubsImageView, fiveClubsImageView, sixClubsImageView,
-    sevenClubsImageView, eightClubsImageView, nineClubsImageView, tenClubsImageView,
-    jackClubsImageView, queenClubsImageView, kingClubsImageView, aceSpadesImageView,
-    deuceSpadesImageView, threeSpadesImageView, fourSpadesImageView, fiveSpadesImageView,
-    sixSpadesImageView, sevenSpadesImageView, eightSpadesImageView, nineSpadesImageView,
-    tenSpadesImageView, jackSpadesImageView, queenSpadesImageView, kingSpadesImageView;
+            aceDiamondsImageView, deuceDiamondsImageView, threeDiamondsImageView, fourDiamondsImageView,
+            fiveDiamondsImageView, sixDiamondsImageView, sevenDiamondsImageView, eightDiamondsImageView,
+            nineDiamondsImageView, tenDiamondsImageView, jackDiamondsImageView, queenDiamondsImageView,
+            kingDiamondsImageView, aceHeartsImageView, deuceHeartsImageView, threeHeartsImageView,
+            fourHeartsImageView, fiveHeartsImageView, sixHeartsImageView, sevenHeartsImageView,
+            eightHeartsImageView, nineHeartsImageView, tenHeartsImageView, jackHeartsImageView,
+            queenHeartsImageView, kingHeartsImageView, aceClubsImageView, deuceClubsImageView,
+            threeClubsImageView, fourClubsImageView, fiveClubsImageView, sixClubsImageView,
+            sevenClubsImageView, eightClubsImageView, nineClubsImageView, tenClubsImageView,
+            jackClubsImageView, queenClubsImageView, kingClubsImageView, aceSpadesImageView,
+            deuceSpadesImageView, threeSpadesImageView, fourSpadesImageView, fiveSpadesImageView,
+            sixSpadesImageView, sevenSpadesImageView, eightSpadesImageView, nineSpadesImageView,
+            tenSpadesImageView, jackSpadesImageView, queenSpadesImageView, kingSpadesImageView;
 
 
-
-    public TextView sampleText;
+    public TextView handText, directionsText, cardOneHoldText, cardTwoHoldText, cardThreeHoldText,
+            cardFourHoldText, cardFiveHoldText;
+    TextView[] holdTextSlots = new TextView[5];
     public Button clearButton;
     public List<Card> hand;
+    Map map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+        // Create HashMap from serialized object
+        try {
+            //FileInputStream fileIn = new FileInputStream(R.raw.test_hash_map_all);
+            InputStream fileIn = getResources().openRawResource(R.raw.test_hash_map_all);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            map = (HashMap) in.readObject();
+            in.close();
+            fileIn.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+            return;
+        } catch (ClassNotFoundException c) {
+            System.out.println("Map class not found");
+            c.printStackTrace();
+            return;
+        }
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -46,73 +73,84 @@ public class MainActivity extends AppCompatActivity {
         // Initialize empty list for the five card hand
         hand = new ArrayList<>();
 
-        // Find reference to TextView in the layout
-        sampleText = (TextView)findViewById(R.id.sample_text);
+        // Find reference to TextViews in the layout
+        handText = (TextView) findViewById(R.id.hand_text);
+        directionsText = (TextView) findViewById(R.id.directions_text);
+        cardOneHoldText = (TextView) findViewById(R.id.card_one_hold);
+        cardTwoHoldText = (TextView) findViewById(R.id.card_two_hold);
+        cardThreeHoldText = (TextView) findViewById(R.id.card_three_hold);
+        cardFourHoldText = (TextView) findViewById(R.id.card_four_hold);
+        cardFiveHoldText = (TextView) findViewById(R.id.card_five_hold);
+        holdTextSlots[0] = cardOneHoldText;
+        holdTextSlots[1] = cardTwoHoldText;
+        holdTextSlots[2] = cardThreeHoldText;
+        holdTextSlots[3] = cardFourHoldText;
+        holdTextSlots[4] = cardFiveHoldText;
 
         //Find reference to ImageView's in the layout
-        cardImageView1 = (ImageView)findViewById(R.id.card_one);
-        cardImageView2 = (ImageView)findViewById(R.id.card_two);
-        cardImageView3 = (ImageView)findViewById(R.id.card_three);
-        cardImageView4 = (ImageView)findViewById(R.id.card_four);
-        cardImageView5 = (ImageView)findViewById(R.id.card_five);
+        cardImageView1 = (ImageView) findViewById(R.id.card_one);
+        cardImageView2 = (ImageView) findViewById(R.id.card_two);
+        cardImageView3 = (ImageView) findViewById(R.id.card_three);
+        cardImageView4 = (ImageView) findViewById(R.id.card_four);
+        cardImageView5 = (ImageView) findViewById(R.id.card_five);
 
-        aceDiamondsImageView = (ImageView)findViewById(R.id.ace_diamonds);
-        deuceDiamondsImageView = (ImageView)findViewById(R.id.deuce_diamonds);
-        threeDiamondsImageView = (ImageView)findViewById(R.id.three_diamonds);
-        fourDiamondsImageView = (ImageView)findViewById(R.id.four_diamonds);
-        fiveDiamondsImageView = (ImageView)findViewById(R.id.five_diamonds);
-        sixDiamondsImageView = (ImageView)findViewById(R.id.six_diamonds);
-        sevenDiamondsImageView = (ImageView)findViewById(R.id.seven_diamonds);
-        eightDiamondsImageView = (ImageView)findViewById(R.id.eight_diamonds);
-        nineDiamondsImageView = (ImageView)findViewById(R.id.nine_diamonds);
-        tenDiamondsImageView = (ImageView)findViewById(R.id.ten_diamonds);
-        jackDiamondsImageView = (ImageView)findViewById(R.id.jack_diamonds);
-        queenDiamondsImageView = (ImageView)findViewById(R.id.queen_diamonds);
-        kingDiamondsImageView = (ImageView)findViewById(R.id.king_diamonds);
+        aceDiamondsImageView = (ImageView) findViewById(R.id.ace_diamonds);
+        deuceDiamondsImageView = (ImageView) findViewById(R.id.deuce_diamonds);
+        threeDiamondsImageView = (ImageView) findViewById(R.id.three_diamonds);
+        fourDiamondsImageView = (ImageView) findViewById(R.id.four_diamonds);
+        fiveDiamondsImageView = (ImageView) findViewById(R.id.five_diamonds);
+        sixDiamondsImageView = (ImageView) findViewById(R.id.six_diamonds);
+        sevenDiamondsImageView = (ImageView) findViewById(R.id.seven_diamonds);
+        eightDiamondsImageView = (ImageView) findViewById(R.id.eight_diamonds);
+        nineDiamondsImageView = (ImageView) findViewById(R.id.nine_diamonds);
+        tenDiamondsImageView = (ImageView) findViewById(R.id.ten_diamonds);
+        jackDiamondsImageView = (ImageView) findViewById(R.id.jack_diamonds);
+        queenDiamondsImageView = (ImageView) findViewById(R.id.queen_diamonds);
+        kingDiamondsImageView = (ImageView) findViewById(R.id.king_diamonds);
 
-        aceHeartsImageView = (ImageView)findViewById(R.id.ace_hearts);
-        deuceHeartsImageView = (ImageView)findViewById(R.id.deuce_hearts);
-        threeHeartsImageView = (ImageView)findViewById(R.id.three_hearts);
-        fourHeartsImageView = (ImageView)findViewById(R.id.four_hearts);
-        fiveHeartsImageView = (ImageView)findViewById(R.id.five_hearts);
-        sixHeartsImageView = (ImageView)findViewById(R.id.six_hearts);
-        sevenHeartsImageView = (ImageView)findViewById(R.id.seven_hearts);
-        eightHeartsImageView = (ImageView)findViewById(R.id.eight_hearts);
-        nineHeartsImageView = (ImageView)findViewById(R.id.nine_hearts);
-        tenHeartsImageView = (ImageView)findViewById(R.id.ten_hearts);
-        jackHeartsImageView = (ImageView)findViewById(R.id.jack_hearts);
-        queenHeartsImageView = (ImageView)findViewById(R.id.queen_hearts);
-        kingHeartsImageView = (ImageView)findViewById(R.id.king_hearts);
+        aceHeartsImageView = (ImageView) findViewById(R.id.ace_hearts);
+        deuceHeartsImageView = (ImageView) findViewById(R.id.deuce_hearts);
+        threeHeartsImageView = (ImageView) findViewById(R.id.three_hearts);
+        fourHeartsImageView = (ImageView) findViewById(R.id.four_hearts);
+        fiveHeartsImageView = (ImageView) findViewById(R.id.five_hearts);
+        sixHeartsImageView = (ImageView) findViewById(R.id.six_hearts);
+        sevenHeartsImageView = (ImageView) findViewById(R.id.seven_hearts);
+        eightHeartsImageView = (ImageView) findViewById(R.id.eight_hearts);
+        nineHeartsImageView = (ImageView) findViewById(R.id.nine_hearts);
+        tenHeartsImageView = (ImageView) findViewById(R.id.ten_hearts);
+        jackHeartsImageView = (ImageView) findViewById(R.id.jack_hearts);
+        queenHeartsImageView = (ImageView) findViewById(R.id.queen_hearts);
+        kingHeartsImageView = (ImageView) findViewById(R.id.king_hearts);
 
-        aceClubsImageView = (ImageView)findViewById(R.id.ace_clubs);
-        deuceClubsImageView = (ImageView)findViewById(R.id.deuce_clubs);
-        threeClubsImageView = (ImageView)findViewById(R.id.three_clubs);
-        fourClubsImageView = (ImageView)findViewById(R.id.four_clubs);
-        fiveClubsImageView = (ImageView)findViewById(R.id.five_clubs);
-        sixClubsImageView = (ImageView)findViewById(R.id.six_clubs);
-        sevenClubsImageView = (ImageView)findViewById(R.id.seven_clubs);
-        eightClubsImageView = (ImageView)findViewById(R.id.eight_clubs);
-        nineClubsImageView = (ImageView)findViewById(R.id.nine_clubs);
-        tenClubsImageView = (ImageView)findViewById(R.id.ten_clubs);
-        jackClubsImageView = (ImageView)findViewById(R.id.jack_clubs);
-        queenClubsImageView = (ImageView)findViewById(R.id.queen_clubs);
-        kingClubsImageView = (ImageView)findViewById(R.id.king_clubs);
+        aceClubsImageView = (ImageView) findViewById(R.id.ace_clubs);
+        deuceClubsImageView = (ImageView) findViewById(R.id.deuce_clubs);
+        threeClubsImageView = (ImageView) findViewById(R.id.three_clubs);
+        fourClubsImageView = (ImageView) findViewById(R.id.four_clubs);
+        fiveClubsImageView = (ImageView) findViewById(R.id.five_clubs);
+        sixClubsImageView = (ImageView) findViewById(R.id.six_clubs);
+        sevenClubsImageView = (ImageView) findViewById(R.id.seven_clubs);
+        eightClubsImageView = (ImageView) findViewById(R.id.eight_clubs);
+        nineClubsImageView = (ImageView) findViewById(R.id.nine_clubs);
+        tenClubsImageView = (ImageView) findViewById(R.id.ten_clubs);
+        jackClubsImageView = (ImageView) findViewById(R.id.jack_clubs);
+        queenClubsImageView = (ImageView) findViewById(R.id.queen_clubs);
+        kingClubsImageView = (ImageView) findViewById(R.id.king_clubs);
 
-        aceSpadesImageView = (ImageView)findViewById(R.id.ace_spades);
-        deuceSpadesImageView = (ImageView)findViewById(R.id.deuce_spades);
-        threeSpadesImageView = (ImageView)findViewById(R.id.three_spades);
-        fourSpadesImageView = (ImageView)findViewById(R.id.four_spades);
-        fiveSpadesImageView = (ImageView)findViewById(R.id.five_spades);
-        sixSpadesImageView = (ImageView)findViewById(R.id.six_spades);
-        sevenSpadesImageView = (ImageView)findViewById(R.id.seven_spades);
-        eightSpadesImageView = (ImageView)findViewById(R.id.eight_spades);
-        nineSpadesImageView = (ImageView)findViewById(R.id.nine_spades);
-        tenSpadesImageView = (ImageView)findViewById(R.id.ten_spades);
-        jackSpadesImageView = (ImageView)findViewById(R.id.jack_spades);
-        queenSpadesImageView = (ImageView)findViewById(R.id.queen_spades);
-        kingSpadesImageView = (ImageView)findViewById(R.id.king_spades);
+        aceSpadesImageView = (ImageView) findViewById(R.id.ace_spades);
+        deuceSpadesImageView = (ImageView) findViewById(R.id.deuce_spades);
+        threeSpadesImageView = (ImageView) findViewById(R.id.three_spades);
+        fourSpadesImageView = (ImageView) findViewById(R.id.four_spades);
+        fiveSpadesImageView = (ImageView) findViewById(R.id.five_spades);
+        sixSpadesImageView = (ImageView) findViewById(R.id.six_spades);
+        sevenSpadesImageView = (ImageView) findViewById(R.id.seven_spades);
+        eightSpadesImageView = (ImageView) findViewById(R.id.eight_spades);
+        nineSpadesImageView = (ImageView) findViewById(R.id.nine_spades);
+        tenSpadesImageView = (ImageView) findViewById(R.id.ten_spades);
+        jackSpadesImageView = (ImageView) findViewById(R.id.jack_spades);
+        queenSpadesImageView = (ImageView) findViewById(R.id.queen_spades);
+        kingSpadesImageView = (ImageView) findViewById(R.id.king_spades);
 
-        clearButton = (Button)findViewById(R.id.clear_button);
+        clearButton = (Button) findViewById(R.id.clear_button);
 
         ImageView[] diamondImageViews = {aceDiamondsImageView, deuceDiamondsImageView,
                 threeDiamondsImageView, fourDiamondsImageView, fiveDiamondsImageView,
@@ -139,19 +177,20 @@ public class MainActivity extends AppCompatActivity {
         System.arraycopy(clubsImageViews, 0, allImageViews[2], 0, clubsImageViews.length);
         System.arraycopy(spadesImageViews, 0, allImageViews[3], 0, spadesImageViews.length);
 
-        for (int i = 0; i < 4; i++){
-            for (int j = 0; j < 13; j++){
-                allImageViews[i][j].setImageResource(deck.getCard((i+1), (j+1)).
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 13; j++) {
+                allImageViews[i][j].setImageResource(deck.getCard((i + 1), (j + 1)).
                         getmResourceIdSmall());
             }
         }
+
 
         // Define the OnClickListener for the five ImageViews representing the current hand
         View.OnClickListener handClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ImageView handCardImage = (ImageView) v;
-                if (!isBlank(handCardImage)){
+                if (!isBlank(handCardImage)) {
                     Card card = (Card) handCardImage.getTag();
                     removeCardFromHand(card);
                 }
@@ -160,19 +199,20 @@ public class MainActivity extends AppCompatActivity {
 
         // Set the five hand ImageView's as blank cards, and set their OnClickListeners
         for (ImageView blankImageView : new ImageView[]{cardImageView1, cardImageView2,
-                cardImageView3, cardImageView4, cardImageView5}){
+                cardImageView3, cardImageView4, cardImageView5}) {
             setBlank(blankImageView);
-            blankImageView.setOnClickListener(handClickListener);
+            //blankImageView.setOnClickListener(handClickListener);
         }
 
-        for (int i = 0; i < 4; i++){
-            for (int j = 0; j < 13; j++){
-                final Card currentCard = deck.getCard((i+1), (j+1));
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 13; j++) {
+                final Card currentCard = deck.getCard((i + 1), (j + 1));
                 ImageView currentImageView = allImageViews[i][j];
                 currentImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!hand.contains(currentCard)){
+                        if (!hand.contains(currentCard)) {
                             addCardToHand(currentCard);
                         } else {
                             Toast.makeText(getApplication(), R.string.card_already_selected,
@@ -191,15 +231,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public boolean addCardToHand(Card cardToAdd){
-        if (hand.size() <= 4){
+    public boolean addCardToHand(Card cardToAdd) {
+        if (hand.size() <= 4) {
             hand.add(cardToAdd);
-            for (ImageView cardImageView : new ImageView[]{cardImageView1,cardImageView2,
-                    cardImageView3,cardImageView4,cardImageView5}){
-                if (isBlank(cardImageView)){
+            for (ImageView cardImageView : new ImageView[]{cardImageView1, cardImageView2,
+                    cardImageView3, cardImageView4, cardImageView5}) {
+                if (isBlank(cardImageView)) {
                     cardImageView.setImageResource(cardToAdd.getmResourceIdSmall());
                     cardImageView.setTag(cardToAdd);
-                    setSampleText();
+                    setHandText();
                     return true;
                 }
             }
@@ -210,41 +250,57 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    public void removeCardFromHand(Card cardToRemove){
+    public void removeCardFromHand(Card cardToRemove) {
+        for (TextView cardHoldSlot : holdTextSlots) {
+            cardHoldSlot.setVisibility(View.INVISIBLE);
+        }
+        directionsText.setText("");
         for (ImageView cardImageView : new ImageView[]{cardImageView1, cardImageView2,
-                cardImageView3, cardImageView4, cardImageView5}){
-            if (isImageViewMatch(cardToRemove, cardImageView)){
+                cardImageView3, cardImageView4, cardImageView5}) {
+            if (isImageViewMatch(cardToRemove, cardImageView)) {
                 setBlank(cardImageView);
-                setSampleText();
+                setHandText();
                 hand.remove(cardToRemove);
                 return;
             }
         }
     }
 
-    public void setSampleText(){
+    public void setHandText() {
         int count = 0;
         for (ImageView cardImageView : new ImageView[]{cardImageView1, cardImageView2,
                 cardImageView3, cardImageView4, cardImageView5})
-        if (!isBlank(cardImageView)){count++;}
+            if (!isBlank(cardImageView)) {
+                count++;
+            }
 
         switch (count) {
-            case 0:     sampleText.setText(R.string.select_cards);
-                        break;
-            case 1:     sampleText.setText(getString(R.string.card_selected_singular, count));
-                        break;
-            case 5:     runCalculation();
-                        break;
-            default:    sampleText.setText(getString(R.string.cards_selected_plural, count));
-                        break;
+            case 0:
+                handText.setText(R.string.select_cards);
+                break;
+            case 1:
+                handText.setText(getString(R.string.card_selected_singular, count));
+                break;
+            case 5:
+                runCalculation();
+                break;
+            default:
+                handText.setText(getString(R.string.cards_selected_plural, count));
+                break;
         }
     }
 
-    public void clearHand(){
+    public void clearHand() {
         for (ImageView cardImageView : new ImageView[]{cardImageView1, cardImageView2,
-                cardImageView3, cardImageView4, cardImageView5}){ setBlank(cardImageView); }
+                cardImageView3, cardImageView4, cardImageView5}) {
+            setBlank(cardImageView);
+        }
         hand.clear();
-        setSampleText();
+        for (TextView cardHoldSlot : holdTextSlots) {
+            cardHoldSlot.setVisibility(View.INVISIBLE);
+        }
+        setHandText();
+        directionsText.setText("");
     }
 
     public boolean isBlank(ImageView image) {
@@ -252,36 +308,88 @@ public class MainActivity extends AppCompatActivity {
                 (MainActivity.this, R.drawable.blank_small_version).getConstantState();
     }
 
-    public void setBlank(ImageView image){
+    public void setBlank(ImageView image) {
         image.setImageResource(R.drawable.blank_small_version);
     }
 
-    public boolean isImageViewMatch(Card card, ImageView imageView){
+    public boolean isImageViewMatch(Card card, ImageView imageView) {
         int cardResId = card.getmResourceIdSmall();
-        int imageViewResId = ((Card)imageView.getTag()).getmResourceIdSmall();
+        int imageViewResId = ((Card) imageView.getTag()).getmResourceIdSmall();
         return cardResId == imageViewResId;
     }
 
-    public void runCalculation(){
+    public void runCalculation() {
         List<String> handString = Hand.handAsStringList(hand);
 
-        if (Hand.flush(handString) && (Hand.straight(Hand.cardRanks(handString)))){
-            sampleText.setText(R.string.straight_flush);
+        if (Hand.flush(handString) && (Hand.straight(Hand.cardRanks(handString)))) {
+            handText.setText(R.string.straight_flush);
         } else if (Hand.kind(4, Hand.cardRanks(handString)) != null) {
-                sampleText.setText(R.string.four_kind);
+            handText.setText(R.string.four_kind);
         } else if (Hand.kind(3, Hand.cardRanks(handString)) != null &&
                 Hand.kind(2, Hand.cardRanks(handString)) != null) {
-            sampleText.setText(R.string.full_house);
+            handText.setText(R.string.full_house);
         } else if (Hand.flush(handString)) {
-            sampleText.setText(R.string.flush);
+            handText.setText(R.string.flush);
         } else if (Hand.straight(Hand.cardRanks(handString))) {
-            sampleText.setText(R.string.straight);
+            handText.setText(R.string.straight);
         } else if (Hand.kind(3, Hand.cardRanks(handString)) != null) {
-            sampleText.setText(R.string.three_kind);
+            handText.setText(R.string.three_kind);
         } else if (Hand.twoPair(Hand.cardRanks(handString)) != null) {
-            sampleText.setText(R.string.two_pair);
+            handText.setText(R.string.two_pair);
         } else {
-            sampleText.setText(handString.toString());
+            handText.setText("No win");
+            directionsText.setText("Hold cards as shown below");
+        }
+        directionsText.setText("Hold cards as shown below");
+
+        String resultingDecision = (String) map.get(Hand.sortedTomHandString(hand));
+
+        String cardA, cardB, cardC, cardD, cardE;
+        cardA = cardB = cardC = cardD = cardE = null;
+
+        switch (resultingDecision.length()) {
+            case 3:
+                directionsText.setText("Discard all cards");
+                break;
+            case 2:
+                cardA = resultingDecision.substring(0, 2);
+                break;
+            case 4:
+                cardA = resultingDecision.substring(0, 2);
+                cardB = resultingDecision.substring(2, 4);
+                break;
+            case 6:
+                cardA = resultingDecision.substring(0, 2);
+                cardB = resultingDecision.substring(2, 4);
+                cardC = resultingDecision.substring(4, 6);
+                break;
+            case 8:
+                cardA = resultingDecision.substring(0, 2);
+                cardB = resultingDecision.substring(2, 4);
+                cardC = resultingDecision.substring(4, 6);
+                cardD = resultingDecision.substring(6, 8);
+                break;
+            case 10:
+                cardA = resultingDecision.substring(0, 2);
+                cardB = resultingDecision.substring(2, 4);
+                cardC = resultingDecision.substring(4, 6);
+                cardD = resultingDecision.substring(6, 8);
+                cardE = resultingDecision.substring(8, 10);
+                break;
+            default:
+                break;
+        }
+
+        String[] resultCards = {cardA, cardB, cardC, cardD, cardE};
+        for (String result : resultCards) {
+            if (result != null) {
+                for (int i = 0; i < 5; i++) {
+                    String compare = hand.get(i).toStringWithLetters();
+                    if (result.equals(compare)) {
+                        holdTextSlots[i].setVisibility(View.VISIBLE);
+                    }
+                }
+            }
         }
     }
 }

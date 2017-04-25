@@ -1,10 +1,14 @@
 package com.rallymonkey911.android.pokertrainer;
 
+import android.support.annotation.NonNull;
+
+import java.util.Comparator;
+
 /**
  * Created by jeff on 3/24/2017.
  */
 
-public class Card {
+public class Card implements Comparable<Card> {
 
     /** The value of the card (e.g., SEVEN) */
     private final int mRank;
@@ -19,10 +23,10 @@ public class Card {
     private int mResourceIdSmall;
 
     /** Kinds of suits */
-    final static int DIAMONDS    = 1;
-    final static int CLUBS       = 2;
-    final static int HEARTS      = 3;
-    final static int SPADES      = 4;
+    final static int SPADES      = 1;
+    final static int HEARTS      = 2;
+    final static int DIAMONDS    = 3;
+    final static int CLUBS       = 4;
 
     /** Kinds of ranks */
     final static int ACE     = 1;
@@ -61,13 +65,13 @@ public class Card {
      *
      * @return the value of the card
      */
-    private int getmRank() {return mRank;}
+    public int getmRank() {return mRank;}
 
     /**
      *
      * @return the suit of the card
      */
-    private int getmSuit() {return mSuit;}
+    public int getmSuit() {return mSuit;}
 
     /**
      *
@@ -98,7 +102,7 @@ public class Card {
      * @return whether the suit is valid
      */
     private static boolean isValidSuit(int suit) {
-        return DIAMONDS <= suit && suit <= SPADES;
+        return SPADES <= suit && suit <= CLUBS;
     }
 
     /**
@@ -167,23 +171,75 @@ public class Card {
 
         switch (getmSuit()){
             case 1:
-                suitAsString = "D";
+                suitAsString = "S";
                 break;
             case 2:
-                suitAsString = "C";
-                break;
-            case 3:
                 suitAsString = "H";
                 break;
+            case 3:
+                suitAsString = "D";
+                break;
             default:
-                suitAsString = "S";
+                suitAsString = "C";
                 break;
         }
 
         return "" + getmRank() + suitAsString;
     }
 
+    public String toStringWithLetters() {
+        String suitAsString;
+        String ranksAsString;
+
+        switch (getmSuit()) {
+            case 1:
+                suitAsString = "S";
+                break;
+            case 2:
+                suitAsString = "H";
+                break;
+            case 3:
+                suitAsString = "D";
+                break;
+            default:
+                suitAsString = "C";
+                break;
+        }
+
+        switch (getmRank()) {
+            case 1:
+                ranksAsString = "A";
+                break;
+            case 10:
+                ranksAsString = "T";
+                break;
+            case 11:
+                ranksAsString = "J";
+                break;
+            case 12:
+                ranksAsString = "Q";
+                break;
+            case 13:
+                ranksAsString = "K";
+                break;
+            default:
+                ranksAsString = String.valueOf(getmRank());
+                break;
+        }
+
+        return "" + ranksAsString + suitAsString;
+    }
+
     public String toStringFullName(){
         return rankToString(getmRank()) + " of " + suitToString(getmSuit());
+    }
+
+    @Override
+    public int compareTo(@NonNull Card o) {
+        if (this.getmSuit() == o.getmSuit()) {
+            return this.getmRank() > o.getmRank() ? 1 : -1;
+        } else {
+            return this.getmSuit() > o.getmSuit() ? 1 : -1;
+        }
     }
 }

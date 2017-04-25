@@ -9,15 +9,25 @@
     tools:context="com.rallymonkey911.android.pokertrainer.MainActivity">
 
     <TextView
-        android:id="@+id/sample_text"
+        android:id="@+id/hand_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="@string/default_text"
+        android:text="@string/default__hand_text"
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold" />
 
+    <TextView
+        android:id="@+id/directions_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/hand_text"
+        android:layout_centerHorizontal="true"
+        android:text=""
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
 
     <Button
@@ -426,7 +436,59 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/card_hand"
+        android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/card_one_hold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
+            android:text="HOLD"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/card_two_hold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
+            android:text="HOLD"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/card_three_hold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
+            android:text="HOLD"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/card_four_hold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
+            android:text="HOLD"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/card_five_hold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
+            android:text="HOLD"
+            android:visibility="invisible" />
+
+    </LinearLayout>
 
 
 </RelativeLayout>

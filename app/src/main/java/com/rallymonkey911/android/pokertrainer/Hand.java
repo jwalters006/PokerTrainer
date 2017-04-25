@@ -21,6 +21,14 @@ class Hand {
         return handAsStringList;
     }
 
+    static String handAsString(List<Card> hand){
+        StringBuilder handAsString = new StringBuilder();
+        for (Card card : hand){
+            handAsString.append(card.toString());
+        }
+        return handAsString.toString();
+    }
+
     static List<Integer> cardRanks(List<String> hand){
         List<Integer> ranks = new ArrayList<>();
         for (String card : hand){
@@ -70,5 +78,16 @@ class Hand {
             return null;
         }
         return null;
+    }
+
+    public static String sortedTomHandString(List<Card>hand){
+        StringBuilder handTomStringSorted = new StringBuilder();
+        List<Card> handCopy = new ArrayList<>(hand);
+        Collections.sort(handCopy);
+
+        for (Card card : handCopy) {
+            handTomStringSorted.append(card.toStringWithLetters());
+        }
+        return handTomStringSorted.toString();
     }
 }
