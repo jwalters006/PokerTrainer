@@ -90,7 +90,7 @@ public class MapLookup {
                 resource = context.getResources().openRawResource(
                         R.raw.test_hash_map_4h);
                 break;
-            case "5h":
+            case "5H":
                 resource = context.getResources().openRawResource(
                         R.raw.test_hash_map_5h);
                 break;
