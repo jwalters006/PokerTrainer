@@ -56,6 +56,10 @@ class Hand {
         return (ranks.get(0) - ranks.get(4) == 4 && sortedRanks.size() == 5);
     }
 
+    static boolean straightFlush(List<String> hand) {
+        return Hand.flush(hand) && Hand.straight(Hand.cardRanks(hand));
+    }
+
     static Integer kind(int n, List<Integer> ranks){
         for (int rank : ranks){
             if (Collections.frequency(ranks, rank) == n){
@@ -63,6 +67,11 @@ class Hand {
             }
         }
         return null;
+    }
+
+    static boolean fullHouse(List<String> hand) {
+        return Hand.kind(3, Hand.cardRanks(hand)) != null &&
+                Hand.kind(2, Hand.cardRanks(hand)) != null;
     }
 
     static Integer[] twoPair(List<Integer> ranks){

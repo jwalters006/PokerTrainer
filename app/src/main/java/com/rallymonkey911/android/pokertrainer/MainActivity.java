@@ -9,9 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,36 +36,16 @@ public class MainActivity extends AppCompatActivity {
             sixSpadesImageView, sevenSpadesImageView, eightSpadesImageView, nineSpadesImageView,
             tenSpadesImageView, jackSpadesImageView, queenSpadesImageView, kingSpadesImageView;
 
-
     public TextView handText, directionsText, cardOneHoldText, cardTwoHoldText, cardThreeHoldText,
             cardFourHoldText, cardFiveHoldText;
+
     TextView[] holdTextSlots = new TextView[5];
     public Button clearButton;
     public List<Card> hand;
-    Map map;
     boolean holdAll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
-        // Create HashMap from serialized object
-        try {
-            //FileInputStream fileIn = new FileInputStream(R.raw.test_hash_map_all);
-            InputStream fileIn = getResources().openRawResource(R.raw.test_hash_map_all);
-            ObjectInputStream in = new ObjectInputStream(fileIn);
-            map = (HashMap) in.readObject();
-            in.close();
-            fileIn.close();
-        } catch (IOException i) {
-            i.printStackTrace();
-            return;
-        } catch (ClassNotFoundException c) {
-            System.out.println("Map class not found");
-            c.printStackTrace();
-            return;
-        }
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -323,12 +305,11 @@ public class MainActivity extends AppCompatActivity {
         List<String> handString = Hand.handAsStringList(hand);
         holdAll = false;
 
-        if (Hand.flush(handString) && (Hand.straight(Hand.cardRanks(handString)))) {
+        if (Hand.straightFlush(handString)) {
             handText.setText(R.string.straight_flush);
         } else if (Hand.kind(4, Hand.cardRanks(handString)) != null) {
             handText.setText(R.string.four_kind);
-        } else if (Hand.kind(3, Hand.cardRanks(handString)) != null &&
-                Hand.kind(2, Hand.cardRanks(handString)) != null) {
+        } else if (Hand.fullHouse(handString)) {
             handText.setText(R.string.full_house);
         } else if (Hand.flush(handString)) {
             handText.setText(R.string.flush);
@@ -344,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
         }
         directionsText.setText("Hold cards as shown below");
 
-        String resultingDecision = (String) map.get(Hand.sortedTomHandString(hand));
+        String resultingDecision = MapLookup.lookUpInMap(this, Hand.sortedTomHandString(hand));
 
         String cardA, cardB, cardC, cardD, cardE;
         cardA = cardB = cardC = cardD = cardE = null;
@@ -387,9 +368,7 @@ public class MainActivity extends AppCompatActivity {
             if (result != null && !holdAll) {
                 for (int i = 0; i < 5; i++) {
                     if (Hand.kind(4, Hand.cardRanks(handString)) != null ||
-                            Hand.kind(3, Hand.cardRanks(handString)) != null &&
-                                    Hand.kind(2, Hand.cardRanks(handString)) != null
-                            ) {
+                            Hand.fullHouse(handString)) {
                         for (TextView holdTextSlot : holdTextSlots) {
                             holdTextSlot.setVisibility((View.VISIBLE));
                         }
