@@ -38,8 +38,9 @@ class Hand {
 
         Collections.sort(ranks, Collections.reverseOrder());
         if (ranks.equals(new ArrayList<>(Arrays.asList(
-                new Integer[]{14, 5, 4, 3, 2})))){
-            return new ArrayList<>(Arrays.asList(new Integer[]{5, 4, 3, 2, 1}));
+                new Integer[]{Card.KING, Card.QUEEN, Card.JACK, Card.TEN, Card.ACE})))){
+            return new ArrayList<>(Arrays.asList(new Integer[]{Card.HIGH_ACE, Card.KING,
+                    Card.QUEEN, Card.JACK, Card.TEN}));
         } else { return ranks; }
     }
 
@@ -53,12 +54,7 @@ class Hand {
 
     static boolean straight(List<Integer> ranks){
         Collection<Integer> sortedRanks = new HashSet<>(ranks);
-        return (ranks.get(0) - ranks.get(4) == 4 && sortedRanks.size() == 5) ||
-                ranks.contains(Card.ACE) &&
-                        ranks.contains(Card.TEN) &&
-                        ranks.contains(Card.JACK) &&
-                        ranks.contains(Card.QUEEN) &&
-                        ranks.contains(Card.KING);
+        return (ranks.get(0) - ranks.get(4) == 4 && sortedRanks.size() == 5);
     }
 
     static boolean straightFlush(List<String> hand) {
@@ -66,12 +62,8 @@ class Hand {
     }
 
     static boolean royalFlush(List<String> hand) {
-        List<Integer> handRanks = Hand.cardRanks(hand);
-        return Hand.flush(hand) && handRanks.contains(Card.ACE) &&
-                handRanks.contains(Card.TEN) &&
-                handRanks.contains(Card.JACK) &&
-                handRanks.contains(Card.QUEEN) &&
-                handRanks.contains(Card.KING);
+        return Hand.flush(hand) && Hand.straight(Hand.cardRanks(hand)) &&
+                Hand.cardRanks(hand).contains(Card.HIGH_ACE);
     }
 
     static Integer kind(int n, List<Integer> ranks){

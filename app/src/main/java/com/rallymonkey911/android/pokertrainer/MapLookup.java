@@ -458,13 +458,12 @@ public class MapLookup {
 
         // Create HashMap from serialized object
         try {
-            InputStream fileIn = resource;
-            BufferedInputStream bufferedFileIn = new BufferedInputStream(fileIn);
+            BufferedInputStream bufferedFileIn = new BufferedInputStream(resource);
             ObjectInputStream in = new ObjectInputStream(bufferedFileIn);
             Map map = (HashMap) in.readObject();
             in.close();
             bufferedFileIn.close();
-            fileIn.close();
+            resource.close();
             String result = (String) map.get(sortedTomHandString);
             map = null;
             return result;

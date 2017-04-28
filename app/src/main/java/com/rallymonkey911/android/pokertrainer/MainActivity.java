@@ -206,10 +206,8 @@ public class MainActivity extends AppCompatActivity {
                                 currentImageView.setAlpha(75);
                             }
                             addCardToHand(currentCard);
-
                         } else {
-                            Toast.makeText(getApplication(), R.string.card_already_selected,
-                                    Toast.LENGTH_SHORT).show();
+                            removeCardFromHand(currentCard, currentImageView);
                         }
                     }
                 });
@@ -358,8 +356,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (Hand.royalFlush(handString)) {
             handText.setText("Royal Flush");
+            bypassMapLookUpAndHoldAll = true;
         } else if (Hand.straightFlush(handString)) {
             handText.setText(R.string.straight_flush);
+            bypassMapLookUpAndHoldAll = true;
         } else if (Hand.kind(4, Hand.cardRanks(handString)) != null) {
             handText.setText(R.string.four_kind);
             bypassMapLookUpAndHoldAll = true;

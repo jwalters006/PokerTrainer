@@ -29,19 +29,20 @@ public class Card implements Comparable<Card> {
     final static int CLUBS       = 4;
 
     /** Kinds of ranks */
-    final static int ACE     = 1;
-    final static int DEUCE   = 2;
-    final static int THREE   = 3;
-    final static int FOUR    = 4;
-    final static int FIVE    = 5;
-    final static int SIX     = 6;
-    final static int SEVEN   = 7;
-    final static int EIGHT   = 8;
-    final static int NINE    = 9;
-    final static int TEN     = 10;
-    final static int JACK    = 11;
-    final static int QUEEN   = 12;
-    final static int KING    = 13;
+    final static int ACE         = 1;
+    final static int DEUCE       = 2;
+    final static int THREE       = 3;
+    final static int FOUR        = 4;
+    final static int FIVE        = 5;
+    final static int SIX         = 6;
+    final static int SEVEN       = 7;
+    final static int EIGHT       = 8;
+    final static int NINE        = 9;
+    final static int TEN         = 10;
+    final static int JACK        = 11;
+    final static int QUEEN       = 12;
+    final static int KING        = 13;
+    final static int HIGH_ACE    = 14;
 
 
 
