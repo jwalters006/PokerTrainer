@@ -13,7 +13,8 @@
     <string name="full_house">Full House</string>
     <string name="straight">Straight</string>
     <string name="flush">Flush</string>
-    <string name="hand_full">Hand is full. To start over, press the clear button</string>
+    <string name="hand_full">Hand is full. Click a card in the hand to discard it, or press the
+        clear button to clear the hand</string>
     <string name="card_selected_singular">
         <xliff:g id="count" example="1">%d</xliff:g>
         card is selected</string>

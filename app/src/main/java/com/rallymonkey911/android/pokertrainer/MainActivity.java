@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
             sixSpadesImageView, sevenSpadesImageView, eightSpadesImageView, nineSpadesImageView,
             tenSpadesImageView, jackSpadesImageView, queenSpadesImageView, kingSpadesImageView;
 
+    ImageView[] diamondsImageViews, heartsImageViews, clubsImageViews, spadesImageViews;
+
     // Declare all TextView objects in the layout
     public TextView handText, directionsText, cardOneHoldText, cardTwoHoldText, cardThreeHoldText,
             cardFourHoldText, cardFiveHoldText;
@@ -138,26 +140,26 @@ public class MainActivity extends AppCompatActivity {
 
         // Store references to all of the non-hand card ImageViews in arrays for convenient
         // processing in a loop below.
-        ImageView[] diamondImageViews = {aceDiamondsImageView, deuceDiamondsImageView,
+        diamondsImageViews = new ImageView[]{aceDiamondsImageView, deuceDiamondsImageView,
                 threeDiamondsImageView, fourDiamondsImageView, fiveDiamondsImageView,
                 sixDiamondsImageView, sevenDiamondsImageView, eightDiamondsImageView,
                 nineDiamondsImageView, tenDiamondsImageView, jackDiamondsImageView,
                 queenDiamondsImageView, kingDiamondsImageView};
-        ImageView[] heartsImageViews = {aceHeartsImageView,
+        heartsImageViews = new ImageView[]{aceHeartsImageView,
                 deuceHeartsImageView, threeHeartsImageView, fourHeartsImageView,
                 fiveHeartsImageView, sixHeartsImageView, sevenHeartsImageView,
                 eightHeartsImageView, nineHeartsImageView, tenHeartsImageView,
                 jackHeartsImageView, queenHeartsImageView, kingHeartsImageView};
-        ImageView[] clubsImageViews = {aceClubsImageView, deuceClubsImageView, threeClubsImageView,
+        clubsImageViews = new ImageView[]{aceClubsImageView, deuceClubsImageView, threeClubsImageView,
                 fourClubsImageView, fiveClubsImageView, sixClubsImageView, sevenClubsImageView,
                 eightClubsImageView, nineClubsImageView, tenClubsImageView, jackClubsImageView,
                 queenClubsImageView, kingClubsImageView};
-        ImageView[] spadesImageViews = {aceSpadesImageView, deuceSpadesImageView,
+        spadesImageViews = new ImageView[]{aceSpadesImageView, deuceSpadesImageView,
                 threeSpadesImageView, fourSpadesImageView, fiveSpadesImageView, sixSpadesImageView,
                 sevenSpadesImageView, eightSpadesImageView, nineSpadesImageView, tenSpadesImageView,
                 jackSpadesImageView, queenSpadesImageView, kingSpadesImageView};
         ImageView[][] allImageViews = new ImageView[4][13];
-        System.arraycopy(diamondImageViews, 0, allImageViews[0], 0, diamondImageViews.length);
+        System.arraycopy(diamondsImageViews, 0, allImageViews[0], 0, diamondsImageViews.length);
         System.arraycopy(heartsImageViews, 0, allImageViews[1], 0, heartsImageViews.length);
         System.arraycopy(clubsImageViews, 0, allImageViews[2], 0, clubsImageViews.length);
         System.arraycopy(spadesImageViews, 0, allImageViews[3], 0, spadesImageViews.length);
@@ -167,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
             for (int j = 0; j < 13; j++) {
                 allImageViews[i][j].setImageResource(deck.getCard((i + 1), (j + 1)).
                         getmResourceIdSmall());
+                allImageViews[i][j].setTag(deck.getCard((i + 1), (j + 1)));
             }
         }
 
@@ -177,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                 ImageView handCardImage = (ImageView) v;
                 if (!isBlank(handCardImage)) {
                     Card card = (Card) handCardImage.getTag();
-                    removeCardFromHand(card);
+                    removeCardFromHand(card, handCardImage);
                 }
             }
         };
@@ -187,19 +190,23 @@ public class MainActivity extends AppCompatActivity {
         for (ImageView blankImageView : new ImageView[]{cardImageView1, cardImageView2,
                 cardImageView3, cardImageView4, cardImageView5}) {
             setBlank(blankImageView);
-            //blankImageView.setOnClickListener(handClickListener);
+            blankImageView.setOnClickListener(handClickListener);
         }
 
         // Set the OnClickListeners for each of the smaller non-hand cards
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 13; j++) {
                 final Card currentCard = deck.getCard((i + 1), (j + 1));
-                ImageView currentImageView = allImageViews[i][j];
+                final ImageView currentImageView = allImageViews[i][j];
                 currentImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (!hand.contains(currentCard)) {
+                            if (hand.size() < 5){
+                                currentImageView.setAlpha(75);
+                            }
                             addCardToHand(currentCard);
+
                         } else {
                             Toast.makeText(getApplication(), R.string.card_already_selected,
                                     Toast.LENGTH_SHORT).show();
@@ -237,20 +244,52 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    public void removeCardFromHand(Card cardToRemove) {
+    public void removeCardFromHand(Card cardToRemove, ImageView cardToRemoveImageView) {
+
+        for (ImageView smallImage : spadesImageViews) {
+            if (smallImage.getTag() == cardToRemoveImageView.getTag()) {
+                smallImage.setAlpha(255);
+            }
+        }
+
+        for (ImageView smallImage : heartsImageViews) {
+            if (smallImage.getTag() == cardToRemoveImageView.getTag()) {
+                smallImage.setAlpha(255);
+            }
+        }
+
+        for (ImageView smallImage : diamondsImageViews) {
+            if (smallImage.getTag() == cardToRemoveImageView.getTag()) {
+                smallImage.setAlpha(255);
+            }
+        }
+
+        for (ImageView smallImage : clubsImageViews) {
+            if (smallImage.getTag() == cardToRemoveImageView.getTag()) {
+                smallImage.setAlpha(255);
+            }
+        }
+
+        hand.remove(cardToRemove);
+        directionsText.setText("");
+
         for (TextView holdTextViewLabel : holdTextViewLabels) {
             holdTextViewLabel.setVisibility(View.INVISIBLE);
         }
-        directionsText.setText("");
-        for (ImageView cardImageView : new ImageView[]{cardImageView1, cardImageView2,
-                cardImageView3, cardImageView4, cardImageView5}) {
-            if (isImageViewMatch(cardToRemove, cardImageView)) {
-                setBlank(cardImageView);
-                setHandText();
-                hand.remove(cardToRemove);
-                return;
-            }
+
+        ImageView[] cardImageViews = new ImageView[]{cardImageView1, cardImageView2,
+                cardImageView3, cardImageView4, cardImageView5};
+
+        for (ImageView cardImageView : cardImageViews) {
+            setBlank(cardImageView);
         }
+
+        for (int i = 0; i < hand.size(); i++) {
+            cardImageViews[i].setImageResource(hand.get(i).getmResourceIdSmall());
+            cardImageViews[i].setTag(hand.get(i));
+        }
+        setHandText();
+
     }
 
     public void setHandText() {
@@ -280,6 +319,8 @@ public class MainActivity extends AppCompatActivity {
         for (TextView holdTextViewLabel : holdTextViewLabels) {
             holdTextViewLabel.setVisibility(View.INVISIBLE);
         }
+
+        setAllImagesToNormalAlpha();
         setHandText();
         directionsText.setText("");
     }
@@ -293,10 +334,22 @@ public class MainActivity extends AppCompatActivity {
         image.setImageResource(R.drawable.blank_small_version);
     }
 
-    public boolean isImageViewMatch(Card card, ImageView imageView) {
-        int cardResId = card.getmResourceIdSmall();
-        int imageViewResId = ((Card) imageView.getTag()).getmResourceIdSmall();
-        return cardResId == imageViewResId;
+    public void setAllImagesToNormalAlpha() {
+        for (ImageView smallImage : spadesImageViews) {
+            smallImage.setAlpha(255);
+        }
+
+        for (ImageView smallImage : heartsImageViews) {
+            smallImage.setAlpha(255);
+        }
+
+        for (ImageView smallImage : diamondsImageViews) {
+            smallImage.setAlpha(255);
+        }
+
+        for (ImageView smallImage : clubsImageViews) {
+            smallImage.setAlpha(255);
+        }
     }
 
     public void detectWinningHand() {
