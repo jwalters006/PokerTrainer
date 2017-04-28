@@ -21,11 +21,6 @@ public class MapLookup {
         String firstCard = sortedTomHandString.substring(0,2);
         String secondCard = sortedTomHandString.substring(2,4);
         String firstTwoCards = firstCard + secondCard;
-
-        String firstCardSuit = firstCard.substring(1, 2);
-
-        String firstCardAndSecondCardSuit = firstCard + secondCard.substring(1,2);
-
         InputStream resource;
 
         switch(firstCard) {
@@ -460,7 +455,6 @@ public class MapLookup {
                         break;
                 }
         }
-
 
         // Create HashMap from serialized object
         try {

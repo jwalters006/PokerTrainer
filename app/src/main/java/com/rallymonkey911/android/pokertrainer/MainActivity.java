@@ -9,18 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Declare all ImageView objects in the layout
     public ImageView cardImageView1, cardImageView2, cardImageView3, cardImageView4, cardImageView5,
             aceDiamondsImageView, deuceDiamondsImageView, threeDiamondsImageView, fourDiamondsImageView,
             fiveDiamondsImageView, sixDiamondsImageView, sevenDiamondsImageView, eightDiamondsImageView,
@@ -36,13 +30,23 @@ public class MainActivity extends AppCompatActivity {
             sixSpadesImageView, sevenSpadesImageView, eightSpadesImageView, nineSpadesImageView,
             tenSpadesImageView, jackSpadesImageView, queenSpadesImageView, kingSpadesImageView;
 
+    // Declare all TextView objects in the layout
     public TextView handText, directionsText, cardOneHoldText, cardTwoHoldText, cardThreeHoldText,
             cardFourHoldText, cardFiveHoldText;
 
-    TextView[] holdTextSlots = new TextView[5];
+    // Declare Button object in the layout
     public Button clearButton;
+
+    // Declare List of Card objects that will later be used to represent the current hand.
     public List<Card> hand;
-    boolean holdAll;
+
+    // Declare array of TextViews which will later store references to the "Hold" TextView
+    // indicators placed above each ImageView representing a card in the hand.
+    TextView[] holdTextViewLabels = new TextView[5];
+
+    // Declare boolean flag used in setting all hold TextViews to Visible automatically if the hand
+    // contains four-of-a-kind or a full-house.
+    boolean bypassMapLookUpAndHoldAll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +68,11 @@ public class MainActivity extends AppCompatActivity {
         cardThreeHoldText = (TextView) findViewById(R.id.card_three_hold);
         cardFourHoldText = (TextView) findViewById(R.id.card_four_hold);
         cardFiveHoldText = (TextView) findViewById(R.id.card_five_hold);
-        holdTextSlots[0] = cardOneHoldText;
-        holdTextSlots[1] = cardTwoHoldText;
-        holdTextSlots[2] = cardThreeHoldText;
-        holdTextSlots[3] = cardFourHoldText;
-        holdTextSlots[4] = cardFiveHoldText;
+        holdTextViewLabels[0] = cardOneHoldText;
+        holdTextViewLabels[1] = cardTwoHoldText;
+        holdTextViewLabels[2] = cardThreeHoldText;
+        holdTextViewLabels[3] = cardFourHoldText;
+        holdTextViewLabels[4] = cardFiveHoldText;
 
         //Find reference to ImageView's in the layout
         cardImageView1 = (ImageView) findViewById(R.id.card_one);
@@ -76,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         cardImageView3 = (ImageView) findViewById(R.id.card_three);
         cardImageView4 = (ImageView) findViewById(R.id.card_four);
         cardImageView5 = (ImageView) findViewById(R.id.card_five);
-
         aceDiamondsImageView = (ImageView) findViewById(R.id.ace_diamonds);
         deuceDiamondsImageView = (ImageView) findViewById(R.id.deuce_diamonds);
         threeDiamondsImageView = (ImageView) findViewById(R.id.three_diamonds);
@@ -90,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
         jackDiamondsImageView = (ImageView) findViewById(R.id.jack_diamonds);
         queenDiamondsImageView = (ImageView) findViewById(R.id.queen_diamonds);
         kingDiamondsImageView = (ImageView) findViewById(R.id.king_diamonds);
-
         aceHeartsImageView = (ImageView) findViewById(R.id.ace_hearts);
         deuceHeartsImageView = (ImageView) findViewById(R.id.deuce_hearts);
         threeHeartsImageView = (ImageView) findViewById(R.id.three_hearts);
@@ -104,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
         jackHeartsImageView = (ImageView) findViewById(R.id.jack_hearts);
         queenHeartsImageView = (ImageView) findViewById(R.id.queen_hearts);
         kingHeartsImageView = (ImageView) findViewById(R.id.king_hearts);
-
         aceClubsImageView = (ImageView) findViewById(R.id.ace_clubs);
         deuceClubsImageView = (ImageView) findViewById(R.id.deuce_clubs);
         threeClubsImageView = (ImageView) findViewById(R.id.three_clubs);
@@ -118,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
         jackClubsImageView = (ImageView) findViewById(R.id.jack_clubs);
         queenClubsImageView = (ImageView) findViewById(R.id.queen_clubs);
         kingClubsImageView = (ImageView) findViewById(R.id.king_clubs);
-
         aceSpadesImageView = (ImageView) findViewById(R.id.ace_spades);
         deuceSpadesImageView = (ImageView) findViewById(R.id.deuce_spades);
         threeSpadesImageView = (ImageView) findViewById(R.id.three_spades);
@@ -133,8 +133,11 @@ public class MainActivity extends AppCompatActivity {
         queenSpadesImageView = (ImageView) findViewById(R.id.queen_spades);
         kingSpadesImageView = (ImageView) findViewById(R.id.king_spades);
 
+        // Find reference to the Button in the layout
         clearButton = (Button) findViewById(R.id.clear_button);
 
+        // Store references to all of the non-hand card ImageViews in arrays for convenient
+        // processing in a loop below.
         ImageView[] diamondImageViews = {aceDiamondsImageView, deuceDiamondsImageView,
                 threeDiamondsImageView, fourDiamondsImageView, fiveDiamondsImageView,
                 sixDiamondsImageView, sevenDiamondsImageView, eightDiamondsImageView,
@@ -153,20 +156,19 @@ public class MainActivity extends AppCompatActivity {
                 threeSpadesImageView, fourSpadesImageView, fiveSpadesImageView, sixSpadesImageView,
                 sevenSpadesImageView, eightSpadesImageView, nineSpadesImageView, tenSpadesImageView,
                 jackSpadesImageView, queenSpadesImageView, kingSpadesImageView};
-
         ImageView[][] allImageViews = new ImageView[4][13];
         System.arraycopy(diamondImageViews, 0, allImageViews[0], 0, diamondImageViews.length);
         System.arraycopy(heartsImageViews, 0, allImageViews[1], 0, heartsImageViews.length);
         System.arraycopy(clubsImageViews, 0, allImageViews[2], 0, clubsImageViews.length);
         System.arraycopy(spadesImageViews, 0, allImageViews[3], 0, spadesImageViews.length);
 
+        // Set the corresponding image resource for each of the smaller non-hand card ImageViews
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 13; j++) {
                 allImageViews[i][j].setImageResource(deck.getCard((i + 1), (j + 1)).
                         getmResourceIdSmall());
             }
         }
-
 
         // Define the OnClickListener for the five ImageViews representing the current hand
         View.OnClickListener handClickListener = new View.OnClickListener() {
@@ -180,14 +182,15 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        // Set the five hand ImageView's as blank cards, and set their OnClickListeners
+        // Set the five hand ImageViews with a blank card image resource, and also set their
+        // OnClickListeners
         for (ImageView blankImageView : new ImageView[]{cardImageView1, cardImageView2,
                 cardImageView3, cardImageView4, cardImageView5}) {
             setBlank(blankImageView);
             //blankImageView.setOnClickListener(handClickListener);
         }
 
-
+        // Set the OnClickListeners for each of the smaller non-hand cards
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 13; j++) {
                 final Card currentCard = deck.getCard((i + 1), (j + 1));
@@ -206,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        // Set the OnClickListener for the clear Button
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -234,8 +238,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void removeCardFromHand(Card cardToRemove) {
-        for (TextView cardHoldSlot : holdTextSlots) {
-            cardHoldSlot.setVisibility(View.INVISIBLE);
+        for (TextView holdTextViewLabel : holdTextViewLabels) {
+            holdTextViewLabel.setVisibility(View.INVISIBLE);
         }
         directionsText.setText("");
         for (ImageView cardImageView : new ImageView[]{cardImageView1, cardImageView2,
@@ -250,14 +254,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setHandText() {
-        int count = 0;
-        for (ImageView cardImageView : new ImageView[]{cardImageView1, cardImageView2,
-                cardImageView3, cardImageView4, cardImageView5})
-            if (!isBlank(cardImageView)) {
-                count++;
-            }
-
-        switch (count) {
+        int count = hand.size();
+        switch (hand.size()) {
             case 0:
                 handText.setText(R.string.select_cards);
                 break;
@@ -265,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
                 handText.setText(getString(R.string.card_selected_singular, count));
                 break;
             case 5:
-                runCalculation();
+                detectWinningHand();
                 break;
             default:
                 handText.setText(getString(R.string.cards_selected_plural, count));
@@ -279,8 +277,8 @@ public class MainActivity extends AppCompatActivity {
             setBlank(cardImageView);
         }
         hand.clear();
-        for (TextView cardHoldSlot : holdTextSlots) {
-            cardHoldSlot.setVisibility(View.INVISIBLE);
+        for (TextView holdTextViewLabel : holdTextViewLabels) {
+            holdTextViewLabel.setVisibility(View.INVISIBLE);
         }
         setHandText();
         directionsText.setText("");
@@ -301,16 +299,18 @@ public class MainActivity extends AppCompatActivity {
         return cardResId == imageViewResId;
     }
 
-    public void runCalculation() {
+    public void detectWinningHand() {
         List<String> handString = Hand.handAsStringList(hand);
-        holdAll = false;
+        bypassMapLookUpAndHoldAll = false;
 
         if (Hand.straightFlush(handString)) {
             handText.setText(R.string.straight_flush);
         } else if (Hand.kind(4, Hand.cardRanks(handString)) != null) {
             handText.setText(R.string.four_kind);
+            bypassMapLookUpAndHoldAll = true;
         } else if (Hand.fullHouse(handString)) {
             handText.setText(R.string.full_house);
+            bypassMapLookUpAndHoldAll = true;
         } else if (Hand.flush(handString)) {
             handText.setText(R.string.flush);
         } else if (Hand.straight(Hand.cardRanks(handString))) {
@@ -321,64 +321,61 @@ public class MainActivity extends AppCompatActivity {
             handText.setText(R.string.two_pair);
         } else {
             handText.setText("No win");
-            directionsText.setText("Hold cards as shown below");
         }
+
         directionsText.setText("Hold cards as shown below");
+        lookUpRecommendedCardsToHold();
+    }
 
-        String resultingDecision = MapLookup.lookUpInMap(this, Hand.sortedTomHandString(hand));
+    public void lookUpRecommendedCardsToHold() {
+        // Use a String representation of the current five card hand to look up the correct
+        // serialized HashMap object.  The String representation of the hand should match as one of
+        // the keys to this HashMap, and will pair with corresponding value, which is a String
+        // representing the optimal choices of cards to hold.
+        if (bypassMapLookUpAndHoldAll) {
+            for (TextView holdTextViewLabel : holdTextViewLabels) {
+                holdTextViewLabel.setVisibility((View.VISIBLE));
+            }
+        } else {
+            String recommendedCardsToHold = MapLookup.lookUpInMap(this, Hand.sortedTomHandString(hand));
+            int recommendedCardsToHoldLength = recommendedCardsToHold.length();
 
-        String cardA, cardB, cardC, cardD, cardE;
-        cardA = cardB = cardC = cardD = cardE = null;
+            // Strings representing each separate card to be held.  One or more may remain as null
+            // objects depending on the actual recommendation of cards to be held.
+            String cardToHoldA, cardToHoldB, cardToHoldC, cardToHoldD, cardToHoldE;
+            cardToHoldA = cardToHoldB = cardToHoldC = cardToHoldD = cardToHoldE = null;
+            String[] cardsToHold = {cardToHoldA, cardToHoldB, cardToHoldC, cardToHoldD, cardToHoldE};
 
-        switch (resultingDecision.length()) {
-            case 3:
+            if (recommendedCardsToHoldLength == 10) {
+                cardsToHold[4] = recommendedCardsToHold.substring(8, 10);
+            }
+            if (recommendedCardsToHoldLength >= 8) {
+                cardsToHold[3] = recommendedCardsToHold.substring(6, 8);
+            }
+            if (recommendedCardsToHoldLength >= 6) {
+                cardsToHold[2] = recommendedCardsToHold.substring(4, 6);
+            }
+            if (recommendedCardsToHoldLength >= 4) {
+                cardsToHold[1] = recommendedCardsToHold.substring(2, 4);
+            }
+            if (recommendedCardsToHoldLength >= 2 && recommendedCardsToHoldLength != 3) {
+                cardsToHold[0] = recommendedCardsToHold.substring(0, 2);
+            }
+
+            // If the length of the recommended cards to hold is 3, the response was "all", meaning to
+            // discard all cards (i.e., do not hold any of the cards).
+            if (recommendedCardsToHoldLength == 3) {
                 directionsText.setText("Discard all cards");
-                break;
-            case 2:
-                cardA = resultingDecision.substring(0, 2);
-                break;
-            case 4:
-                cardA = resultingDecision.substring(0, 2);
-                cardB = resultingDecision.substring(2, 4);
-                break;
-            case 6:
-                cardA = resultingDecision.substring(0, 2);
-                cardB = resultingDecision.substring(2, 4);
-                cardC = resultingDecision.substring(4, 6);
-                break;
-            case 8:
-                cardA = resultingDecision.substring(0, 2);
-                cardB = resultingDecision.substring(2, 4);
-                cardC = resultingDecision.substring(4, 6);
-                cardD = resultingDecision.substring(6, 8);
-                break;
-            case 10:
-                cardA = resultingDecision.substring(0, 2);
-                cardB = resultingDecision.substring(2, 4);
-                cardC = resultingDecision.substring(4, 6);
-                cardD = resultingDecision.substring(6, 8);
-                cardE = resultingDecision.substring(8, 10);
-                break;
-            default:
-                break;
-        }
+            }
 
-        String[] resultCards = {cardA, cardB, cardC, cardD, cardE};
-        for (String result : resultCards) {
-            if (result != null && !holdAll) {
-                for (int i = 0; i < 5; i++) {
-                    if (Hand.kind(4, Hand.cardRanks(handString)) != null ||
-                            Hand.fullHouse(handString)) {
-                        for (TextView holdTextSlot : holdTextSlots) {
-                            holdTextSlot.setVisibility((View.VISIBLE));
+            for (String cardToHold : cardsToHold) {
+                if (cardToHold != null) {
+                    for (int i = 0; i < 5; i++) {
+                        String compare = hand.get(i).toStringWithLetters();
+                        if (cardToHold.equals(compare)) {
+                            holdTextViewLabels[i].setVisibility(View.VISIBLE);
+                            break;
                         }
-                        holdAll = true;
-                        break;
-                    }
-                    String compare = hand.get(i).toStringWithLetters();
-                    if (result.equals(compare)) {
-                        holdTextSlots[i].setVisibility(View.VISIBLE);
-                        break;
                     }
                 }
             }
