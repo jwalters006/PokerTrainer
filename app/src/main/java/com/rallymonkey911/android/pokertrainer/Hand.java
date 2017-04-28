@@ -53,11 +53,25 @@ class Hand {
 
     static boolean straight(List<Integer> ranks){
         Collection<Integer> sortedRanks = new HashSet<>(ranks);
-        return (ranks.get(0) - ranks.get(4) == 4 && sortedRanks.size() == 5);
+        return (ranks.get(0) - ranks.get(4) == 4 && sortedRanks.size() == 5) ||
+                ranks.contains(Card.ACE) &&
+                        ranks.contains(Card.TEN) &&
+                        ranks.contains(Card.JACK) &&
+                        ranks.contains(Card.QUEEN) &&
+                        ranks.contains(Card.KING);
     }
 
     static boolean straightFlush(List<String> hand) {
         return Hand.flush(hand) && Hand.straight(Hand.cardRanks(hand));
+    }
+
+    static boolean royalFlush(List<String> hand) {
+        List<Integer> handRanks = Hand.cardRanks(hand);
+        return Hand.flush(hand) && handRanks.contains(Card.ACE) &&
+                handRanks.contains(Card.TEN) &&
+                handRanks.contains(Card.JACK) &&
+                handRanks.contains(Card.QUEEN) &&
+                handRanks.contains(Card.KING);
     }
 
     static Integer kind(int n, List<Integer> ranks){

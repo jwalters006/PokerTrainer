@@ -356,7 +356,9 @@ public class MainActivity extends AppCompatActivity {
         List<String> handString = Hand.handAsStringList(hand);
         bypassMapLookUpAndHoldAll = false;
 
-        if (Hand.straightFlush(handString)) {
+        if (Hand.royalFlush(handString)) {
+            handText.setText("Royal Flush");
+        } else if (Hand.straightFlush(handString)) {
             handText.setText(R.string.straight_flush);
         } else if (Hand.kind(4, Hand.cardRanks(handString)) != null) {
             handText.setText(R.string.four_kind);
