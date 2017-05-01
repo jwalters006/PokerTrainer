@@ -394,55 +394,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             new PokerAsyncTask(this, directionsText, hand, holdTextViewLabels).execute(
                     Hand.sortedTomHandString(hand));
-
-            /**
-
-            String recommendedCardsToHold = MapLookup.lookUpInMap(this, Hand.sortedTomHandString(hand));
-            int recommendedCardsToHoldLength = recommendedCardsToHold.length();
-
-            // Strings representing each separate card to be held.  One or more may remain as null
-            // objects depending on the actual recommendation of cards to be held.
-            String cardToHoldA, cardToHoldB, cardToHoldC, cardToHoldD, cardToHoldE;
-            cardToHoldA = cardToHoldB = cardToHoldC = cardToHoldD = cardToHoldE = null;
-            String[] cardsToHold = {cardToHoldA, cardToHoldB, cardToHoldC, cardToHoldD, cardToHoldE};
-
-            if (recommendedCardsToHoldLength == 10) {
-                cardsToHold[4] = recommendedCardsToHold.substring(8, 10);
-            }
-            if (recommendedCardsToHoldLength >= 8) {
-                cardsToHold[3] = recommendedCardsToHold.substring(6, 8);
-            }
-            if (recommendedCardsToHoldLength >= 6) {
-                cardsToHold[2] = recommendedCardsToHold.substring(4, 6);
-            }
-            if (recommendedCardsToHoldLength >= 4) {
-                cardsToHold[1] = recommendedCardsToHold.substring(2, 4);
-            }
-            if (recommendedCardsToHoldLength >= 2 && recommendedCardsToHoldLength != 3) {
-                cardsToHold[0] = recommendedCardsToHold.substring(0, 2);
-            }
-
-            // If the length of the recommended cards to hold is 3, the response was "all", meaning to
-            // discard all cards (i.e., do not hold any of the cards).
-            if (recommendedCardsToHoldLength == 3) {
-                directionsText.setText("Discard all cards");
-            }
-
-            for (String cardToHold : cardsToHold) {
-                if (cardToHold != null) {
-                    for (int i = 0; i < 5; i++) {
-                        String compare = hand.get(i).toStringWithLetters();
-                        if (cardToHold.equals(compare)) {
-                            holdTextViewLabels[i].setVisibility(View.VISIBLE);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            */
-
-
         }
     }
 }
