@@ -21,21 +21,12 @@ class Hand {
         return handAsStringList;
     }
 
-    static String handAsString(List<Card> hand){
-        StringBuilder handAsString = new StringBuilder();
-        for (Card card : hand){
-            handAsString.append(card.toString());
-        }
-        return handAsString.toString();
-    }
-
     static List<Integer> cardRanks(List<String> hand){
         List<Integer> ranks = new ArrayList<>();
         for (String card : hand){
             String rank = card.substring(0, card.length()-1);
             ranks.add(Integer.parseInt(rank));
         }
-
         Collections.sort(ranks, Collections.reverseOrder());
         if (ranks.equals(new ArrayList<>(Arrays.asList(
                 new Integer[]{Card.KING, Card.QUEEN, Card.JACK, Card.TEN, Card.ACE})))){

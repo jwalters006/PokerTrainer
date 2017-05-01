@@ -375,10 +375,10 @@ public class MainActivity extends AppCompatActivity {
         } else if (Hand.twoPair(Hand.cardRanks(handString)) != null) {
             handText.setText(R.string.two_pair);
         } else {
-            handText.setText("No win");
+            handText.setText(R.string.no_win);
         }
 
-        directionsText.setText("Hold cards as shown below");
+        //directionsText.setText(R.string.hold_cards_below);
         lookUpRecommendedCardsToHold();
     }
 
@@ -392,6 +392,11 @@ public class MainActivity extends AppCompatActivity {
                 holdTextViewLabel.setVisibility((View.VISIBLE));
             }
         } else {
+            new PokerAsyncTask(this, directionsText, hand, holdTextViewLabels).execute(
+                    Hand.sortedTomHandString(hand));
+
+            /**
+
             String recommendedCardsToHold = MapLookup.lookUpInMap(this, Hand.sortedTomHandString(hand));
             int recommendedCardsToHoldLength = recommendedCardsToHold.length();
 
@@ -434,6 +439,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
+
+            */
+
+
         }
     }
 }
