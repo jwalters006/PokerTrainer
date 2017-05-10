@@ -3,16 +3,20 @@ package com.rallymonkey911.android.pokertrainer;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     // Declare all ImageView objects in the layout
     public ImageView cardImageView1, cardImageView2, cardImageView3, cardImageView4, cardImageView5,
@@ -49,6 +53,11 @@ public class MainActivity extends AppCompatActivity {
     // Declare boolean flag used in setting all hold TextViews to Visible automatically if the hand
     // contains four-of-a-kind or a full-house.
     boolean bypassMapLookUpAndHoldAll;
+
+    // Declare Spinner object that will be used to select the appropriate result table
+    Spinner gameChoiceSpinner;
+
+    String gameSelected = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +147,22 @@ public class MainActivity extends AppCompatActivity {
         // Find reference to the Button in the layout
         clearButton = (Button) findViewById(R.id.clear_button);
 
+        // Find reference to the Spinner in the layout
+        gameChoiceSpinner = (Spinner) findViewById(R.id.game_choice_spinner);
+
+        // Create an ArrayAdapter using a string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.game_choices_array, android.R.layout.simple_spinner_item);
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Apply the adapter to the spinner
+        gameChoiceSpinner.setAdapter(adapter);
+
+        // Set the listener for the spinner
+        gameChoiceSpinner.setOnItemSelectedListener(this);
+
         // Store references to all of the non-hand card ImageViews in arrays for convenient
         // processing in a loop below.
         diamondsImageViews = new ImageView[]{aceDiamondsImageView, deuceDiamondsImageView,
@@ -221,6 +246,19 @@ public class MainActivity extends AppCompatActivity {
                 clearHand();
             }
         });
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        gameSelected = (String) parent.getItemAtPosition(position);
+        setHandText();
+        Log.v("Retrieving selection ", (String) parent.getItemAtPosition(position));
+        Log.v("test", getResources().getStringArray(R.array.game_choices_array)[position]);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        gameSelected = (String) parent.getItemAtPosition(0);
     }
 
     public boolean addCardToHand(Card cardToAdd) {
@@ -392,8 +430,8 @@ public class MainActivity extends AppCompatActivity {
                 holdTextViewLabel.setVisibility((View.VISIBLE));
             }
         } else {
-            new PokerAsyncTask(this, directionsText, hand, holdTextViewLabels).execute(
-                    Hand.sortedTomHandString(hand));
+            new PokerAsyncTask(this, directionsText, hand, holdTextViewLabels,
+                    gameSelected).execute(Hand.sortedTomHandString(hand));
         }
     }
 }

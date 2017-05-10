@@ -17,13 +17,15 @@ public class PokerAsyncTask extends AsyncTask<String, Void, String> {
     private TextView mDirectionsText;
     private List<Card> mHand;
     private TextView[] mHoldTextViewLabels;
+    private String mGameSelected;
 
     public PokerAsyncTask(Context context, TextView directionsText, List<Card> hand,
-                          TextView[] holdTextViewLabels) {
+                          TextView[] holdTextViewLabels, String gameSelected) {
         mContext = context;
         mDirectionsText = directionsText;
         mHand = hand;
         mHoldTextViewLabels = holdTextViewLabels;
+        mGameSelected = gameSelected;
 
     }
 
@@ -34,11 +36,16 @@ public class PokerAsyncTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... hand) {
-        return MapLookup.lookUpInMap(mContext, hand[0]);
+        return MapLookup.lookUpInMap(mContext, hand[0], mGameSelected);
     }
 
     @Override
     protected void onPostExecute(String result) {
+
+        for (TextView holdLabel: mHoldTextViewLabels) {
+            holdLabel.setVisibility(View.INVISIBLE);
+        }
+
         int recommendedCardsToHoldLength = result.length();
 
         if (recommendedCardsToHoldLength != 3) {

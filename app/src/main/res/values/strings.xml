@@ -24,4 +24,11 @@
         card is selected</string>
     <string name="cards_selected_plural"><xliff:g id="count" example="2">%d</xliff:g>
          cards are selected</string>
+
+
+    <string-array name="game_choices_array">
+        <item>Jacks or Better</item>
+        <item>Deuces Wild</item>
+    </string-array>
+
 </resources>

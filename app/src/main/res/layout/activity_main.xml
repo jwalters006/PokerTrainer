@@ -8,10 +8,16 @@
     android:layout_height="match_parent"
     tools:context="com.rallymonkey911.android.pokertrainer.MainActivity">
 
+    <Spinner
+        android:id="@+id/game_choice_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"></Spinner>
+
     <TextView
         android:id="@+id/hand_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/game_choice_spinner"
         android:layout_centerHorizontal="true"
         android:text="@string/default__hand_text"
         android:textAlignment="center"
