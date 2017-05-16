@@ -35,7 +35,7 @@ class Hand {
         } else { return ranks; }
     }
 
-    static boolean flush(List<String> hand){
+    static boolean isFlush(List<String> hand){
         Collection<String> suits = new HashSet<>();
         for (String card : hand){
             suits.add(card.substring(card.length()-1));
@@ -43,17 +43,17 @@ class Hand {
         return suits.size() == 1;
     }
 
-    static boolean straight(List<Integer> ranks){
+    static boolean isStraight(List<Integer> ranks){
         Collection<Integer> sortedRanks = new HashSet<>(ranks);
         return (ranks.get(0) - ranks.get(4) == 4 && sortedRanks.size() == 5);
     }
 
-    static boolean straightFlush(List<String> hand) {
-        return Hand.flush(hand) && Hand.straight(Hand.cardRanks(hand));
+    static boolean isStraightFlush(List<String> hand) {
+        return Hand.isFlush(hand) && Hand.isStraight(Hand.cardRanks(hand));
     }
 
-    static boolean royalFlush(List<String> hand) {
-        return Hand.flush(hand) && Hand.straight(Hand.cardRanks(hand)) &&
+    static boolean isRoyalFlush(List<String> hand) {
+        return Hand.isFlush(hand) && Hand.isStraight(Hand.cardRanks(hand)) &&
                 Hand.cardRanks(hand).contains(Card.HIGH_ACE);
     }
 
@@ -66,7 +66,7 @@ class Hand {
         return null;
     }
 
-    static boolean fullHouse(List<String> hand) {
+    static boolean isFullHouse(List<String> hand) {
         return Hand.kind(3, Hand.cardRanks(hand)) != null &&
                 Hand.kind(2, Hand.cardRanks(hand)) != null;
     }

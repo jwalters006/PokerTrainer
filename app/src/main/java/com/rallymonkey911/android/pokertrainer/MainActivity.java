@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         holdTextViewLabels[3] = cardFourHoldText;
         holdTextViewLabels[4] = cardFiveHoldText;
 
-        //Find reference to ImageView's in the layout
+        // Find reference to ImageView's in the layout
         cardImageView1 = (ImageView) findViewById(R.id.card_one);
         cardImageView2 = (ImageView) findViewById(R.id.card_two);
         cardImageView3 = (ImageView) findViewById(R.id.card_three);
@@ -392,21 +392,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         List<String> handString = Hand.handAsStringList(hand);
         bypassMapLookUpAndHoldAll = false;
 
-        if (Hand.royalFlush(handString)) {
+        if (Hand.isRoyalFlush(handString)) {
             handText.setText("Royal Flush");
             bypassMapLookUpAndHoldAll = true;
-        } else if (Hand.straightFlush(handString)) {
+        } else if (Hand.isStraightFlush(handString)) {
             handText.setText(R.string.straight_flush);
             bypassMapLookUpAndHoldAll = true;
         } else if (Hand.kind(4, Hand.cardRanks(handString)) != null) {
             handText.setText(R.string.four_kind);
             bypassMapLookUpAndHoldAll = true;
-        } else if (Hand.fullHouse(handString)) {
+        } else if (Hand.isFullHouse(handString)) {
             handText.setText(R.string.full_house);
             bypassMapLookUpAndHoldAll = true;
-        } else if (Hand.flush(handString)) {
+        } else if (Hand.isFlush(handString)) {
             handText.setText(R.string.flush);
-        } else if (Hand.straight(Hand.cardRanks(handString))) {
+        } else if (Hand.isStraight(Hand.cardRanks(handString))) {
             handText.setText(R.string.straight);
         } else if (Hand.kind(3, Hand.cardRanks(handString)) != null) {
             handText.setText(R.string.three_kind);
