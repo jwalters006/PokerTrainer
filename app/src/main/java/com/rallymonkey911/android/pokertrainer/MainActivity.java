@@ -91,6 +91,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         holdTextViewLabels[3] = cardFourHoldText;
         holdTextViewLabels[4] = cardFiveHoldText;
 
+        // Disable hand status description for now (may enable it again in future commit
+        handText.setVisibility(View.GONE);
+
         // Find reference to ImageView's in the layout
         cardImageView1 = (ImageView) findViewById(R.id.card_one);
         cardImageView2 = (ImageView) findViewById(R.id.card_two);
@@ -438,7 +441,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             handText.setText(R.string.no_win);
         }
 
-        //directionsText.setText(R.string.hold_cards_below);
         lookUpRecommendedCardsToHold();
     }
 
