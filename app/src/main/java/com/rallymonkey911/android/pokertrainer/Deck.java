@@ -10,8 +10,8 @@ import android.content.Context;
 class Deck {
 
     /** Declare and initialize the fixed number of suits and ranks in a deck */
-    private static final int NUM_SUITS = 4;
-    private static final int NUM_RANKS = 13;
+    static final int NUM_SUITS = 4;
+    static final int NUM_RANKS = 13;
 
     /** Declare and initialize the directory portion of the file path to the card images */
     private static final String RES_FILE_PATH = "drawable/";

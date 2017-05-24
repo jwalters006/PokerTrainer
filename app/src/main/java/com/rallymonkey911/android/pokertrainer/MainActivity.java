@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public Button clearButton;
 
     // Declare List of Card objects that will later be used to represent the current hand.
-    public List<Card> hand;
+    public ArrayList<Card> hand;
 
     // Declare array of TextViews which will later store references to the "Hold" TextView
     // indicators placed above each ImageView representing a card in the hand.
@@ -58,6 +58,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     Spinner gameChoiceSpinner;
 
     String gameSelected = null;
+
+    public static final String STATE_PLAYER_HAND = "playerHand";
+    public static final String STATE_GAME_SELECTED = "gameSelected";
+    public static final int FULLY_VISIBLE = 255;
+    public static final int SEMI_TRANSPARENT = 75;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Find reference to TextViews in the layout
         handText = (TextView) findViewById(R.id.hand_text);
         directionsText = (TextView) findViewById(R.id.directions_text);
+
         cardOneHoldText = (TextView) findViewById(R.id.card_one_hold);
         cardTwoHoldText = (TextView) findViewById(R.id.card_two_hold);
         cardThreeHoldText = (TextView) findViewById(R.id.card_three_hold);
@@ -190,8 +196,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         System.arraycopy(spadesImageViews, 0, allImageViews[3], 0, spadesImageViews.length);
 
         // Set the corresponding image resource for each of the smaller non-hand card ImageViews
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 13; j++) {
+        for (int i = 0; i < Deck.NUM_SUITS; i++) {
+            for (int j = 0; j < Deck.NUM_RANKS; j++) {
                 allImageViews[i][j].setImageResource(deck.getCard((i + 1), (j + 1)).
                         getmResourceIdSmall());
                 allImageViews[i][j].setTag(deck.getCard((i + 1), (j + 1)));
@@ -219,16 +225,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         // Set the OnClickListeners for each of the smaller non-hand cards
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 13; j++) {
+        for (int i = 0; i < Deck.NUM_SUITS; i++) {
+            for (int j = 0; j < Deck.NUM_RANKS; j++) {
                 final Card currentCard = deck.getCard((i + 1), (j + 1));
                 final ImageView currentImageView = allImageViews[i][j];
                 currentImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (!hand.contains(currentCard)) {
-                            if (hand.size() < 5){
-                                currentImageView.setAlpha(75);
+                            if (hand.size() < PokerAsyncTask.NUMBER_OF_CARDS_IN_FULL_HAND){
+                                currentImageView.setAlpha(SEMI_TRANSPARENT);
                             }
                             addCardToHand(currentCard);
                         } else {
@@ -246,6 +252,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 clearHand();
             }
         });
+
+        if (savedInstanceState != null) {
+            ArrayList<Card> handCopy = (ArrayList<Card>) savedInstanceState.getSerializable(
+                    STATE_PLAYER_HAND);
+            gameSelected = savedInstanceState.getString(STATE_GAME_SELECTED);
+            for (Card card: handCopy) {
+                addCardToHand(card);
+            }
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(STATE_PLAYER_HAND, hand);
+        outState.putString(STATE_GAME_SELECTED, gameSelected);
     }
 
     @Override
@@ -262,7 +284,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public boolean addCardToHand(Card cardToAdd) {
-        if (hand.size() <= 4) {
+        if (hand.size() < PokerAsyncTask.NUMBER_OF_CARDS_IN_FULL_HAND) {
             hand.add(cardToAdd);
             for (ImageView cardImageView : new ImageView[]{cardImageView1, cardImageView2,
                     cardImageView3, cardImageView4, cardImageView5}) {
@@ -284,25 +306,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         for (ImageView smallImage : spadesImageViews) {
             if (smallImage.getTag() == cardToRemoveImageView.getTag()) {
-                smallImage.setAlpha(255);
+                smallImage.setAlpha(FULLY_VISIBLE);
             }
         }
 
         for (ImageView smallImage : heartsImageViews) {
             if (smallImage.getTag() == cardToRemoveImageView.getTag()) {
-                smallImage.setAlpha(255);
+                smallImage.setAlpha(FULLY_VISIBLE);
             }
         }
 
         for (ImageView smallImage : diamondsImageViews) {
             if (smallImage.getTag() == cardToRemoveImageView.getTag()) {
-                smallImage.setAlpha(255);
+                smallImage.setAlpha(FULLY_VISIBLE);
             }
         }
 
         for (ImageView smallImage : clubsImageViews) {
             if (smallImage.getTag() == cardToRemoveImageView.getTag()) {
-                smallImage.setAlpha(255);
+                smallImage.setAlpha(FULLY_VISIBLE);
             }
         }
 
@@ -337,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case 1:
                 handText.setText(getString(R.string.card_selected_singular, count));
                 break;
-            case 5:
+            case PokerAsyncTask.NUMBER_OF_CARDS_IN_FULL_HAND:
                 detectWinningHand();
                 break;
             default:
@@ -372,19 +394,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void setAllImagesToNormalAlpha() {
         for (ImageView smallImage : spadesImageViews) {
-            smallImage.setAlpha(255);
+            smallImage.setAlpha(FULLY_VISIBLE);
         }
 
         for (ImageView smallImage : heartsImageViews) {
-            smallImage.setAlpha(255);
+            smallImage.setAlpha(FULLY_VISIBLE);
         }
 
         for (ImageView smallImage : diamondsImageViews) {
-            smallImage.setAlpha(255);
+            smallImage.setAlpha(FULLY_VISIBLE);
         }
 
         for (ImageView smallImage : clubsImageViews) {
-            smallImage.setAlpha(255);
+            smallImage.setAlpha(FULLY_VISIBLE);
         }
     }
 

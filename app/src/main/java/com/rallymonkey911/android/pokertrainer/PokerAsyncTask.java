@@ -19,14 +19,17 @@ public class PokerAsyncTask extends AsyncTask<String, Void, String> {
     private TextView[] mHoldTextViewLabels;
     private String mGameSelected;
 
-    public PokerAsyncTask(Context context, TextView directionsText, List<Card> hand,
+    private static final int DISCARD_ALL_CODE = 3;
+    static final int NUMBER_OF_CARDS_IN_FULL_HAND = 5;
+    static final int CODE_LENGTH_ONE_CARD = 2;
+
+    PokerAsyncTask(Context context, TextView directionsText, List<Card> hand,
                           TextView[] holdTextViewLabels, String gameSelected) {
         mContext = context;
         mDirectionsText = directionsText;
         mHand = hand;
         mHoldTextViewLabels = holdTextViewLabels;
         mGameSelected = gameSelected;
-
     }
 
     @Override
@@ -41,48 +44,28 @@ public class PokerAsyncTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
+        // Strings representing each separate card to be held.  One or more may remain as null
+        // objects depending on the actual recommendation of cards to be held.
+        String[] cardsToHold = new String[NUMBER_OF_CARDS_IN_FULL_HAND];
+        for (int i = 0; i < NUMBER_OF_CARDS_IN_FULL_HAND; i++) { cardsToHold[i] = null; }
+
+        if (result.length() == DISCARD_ALL_CODE){
+            mDirectionsText.setText(R.string.discard_all);
+        } else {
+            mDirectionsText.setText(R.string.hold_cards_below);
+            for (int i = 0; i < result.length() / CODE_LENGTH_ONE_CARD; i++) {
+                cardsToHold[i] = result.substring(i*CODE_LENGTH_ONE_CARD,
+                        (i*CODE_LENGTH_ONE_CARD) + CODE_LENGTH_ONE_CARD);
+            }
+        }
 
         for (TextView holdLabel: mHoldTextViewLabels) {
             holdLabel.setVisibility(View.INVISIBLE);
         }
 
-        int recommendedCardsToHoldLength = result.length();
-
-        if (recommendedCardsToHoldLength != 3) {
-            mDirectionsText.setText(R.string.hold_cards_below);
-        }
-
-        // Strings representing each separate card to be held.  One or more may remain as null
-        // objects depending on the actual recommendation of cards to be held.
-        String cardToHoldA, cardToHoldB, cardToHoldC, cardToHoldD, cardToHoldE;
-        cardToHoldA = cardToHoldB = cardToHoldC = cardToHoldD = cardToHoldE = null;
-        String[] cardsToHold = {cardToHoldA, cardToHoldB, cardToHoldC, cardToHoldD, cardToHoldE};
-
-        if (recommendedCardsToHoldLength == 10) {
-            cardsToHold[4] = result.substring(8, 10);
-        }
-        if (recommendedCardsToHoldLength >= 8) {
-            cardsToHold[3] = result.substring(6, 8);
-        }
-        if (recommendedCardsToHoldLength >= 6) {
-            cardsToHold[2] = result.substring(4, 6);
-        }
-        if (recommendedCardsToHoldLength >= 4) {
-            cardsToHold[1] = result.substring(2, 4);
-        }
-        if (recommendedCardsToHoldLength >= 2 && recommendedCardsToHoldLength != 3) {
-            cardsToHold[0] = result.substring(0, 2);
-        }
-
-        // If the length of the recommended cards to hold is 3, the response was "all", meaning to
-        // discard all cards (i.e., do not hold any of the cards).
-        if (recommendedCardsToHoldLength == 3) {
-            mDirectionsText.setText(R.string.discard_all);
-        }
-
         for (String cardToHold : cardsToHold) {
             if (cardToHold != null) {
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < NUMBER_OF_CARDS_IN_FULL_HAND; i++) {
                     String compare = mHand.get(i).toStringWithLetters();
                     if (cardToHold.equals(compare)) {
                         mHoldTextViewLabels[i].setVisibility(View.VISIBLE);

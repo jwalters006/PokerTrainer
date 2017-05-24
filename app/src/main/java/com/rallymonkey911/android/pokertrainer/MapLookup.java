@@ -19,8 +19,9 @@ public class MapLookup {
 
     public static String lookUpInMap(Context context, String sortedTomHandString,
                                      String gameSelected) {
-        String firstCard = sortedTomHandString.substring(0,2);
-        String secondCard = sortedTomHandString.substring(2,4);
+        String firstCard = sortedTomHandString.substring(0,PokerAsyncTask.CODE_LENGTH_ONE_CARD);
+        String secondCard = sortedTomHandString.substring(PokerAsyncTask.CODE_LENGTH_ONE_CARD,
+                PokerAsyncTask.CODE_LENGTH_ONE_CARD*2);
         String firstTwoCards = firstCard + secondCard;
         InputStream resource;
         String resourcePrefix;
