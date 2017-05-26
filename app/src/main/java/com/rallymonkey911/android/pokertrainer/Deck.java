@@ -28,13 +28,13 @@ class Deck {
     Deck(Context context) {
 
         cards = new Card[NUM_SUITS][NUM_RANKS];
-        for (int suit = Card.SPADES; suit <= Card.CLUBS; suit++) {
+        for (int suit = Card.DIAMONDS; suit <= Card.SPADES; suit++) {
             for (int rank = Card.ACE; rank <= Card.KING; rank++) {
                 int resIdFull = context.getResources().getIdentifier(RES_FILE_PATH +
-                                getCardFileName(suit, rank) + "_small_version", null,
+                                getCardFileName(suit, rank) + "_cropped", null,
                         context.getPackageName());
                 int resIdSmall = context.getResources().getIdentifier(RES_FILE_PATH +
-                                getCardFileName(suit, rank) + "_cropped", null,
+                                getCardSmallImageName(suit, rank), null,
                                 context.getPackageName());
                 cards[suit-1][rank-1] = new Card(rank, suit, resIdFull, resIdSmall);
             }
@@ -55,18 +55,37 @@ class Deck {
         String separator = "_";
 
         switch (suit){
-            case 1:     suitAsString = "s";
+            case 1:     suitAsString = "d";
                         break;
             case 2:     suitAsString = "h";
                         break;
-            case 3:     suitAsString = "d";
+            case 3:     suitAsString = "c";
                         break;
-            case 4:     suitAsString = "c";
+            case 4:     suitAsString = "s";
                         break;
             default:    suitAsString = null;
                         break;
         }
         return suitAsString + separator + rankAsString;
+    }
+
+    private String getCardSmallImageName(int suit, int rank){
+        String suitColor;
+        String rankAsString = "" + rank;
+        String separator = "_";
+
+        switch(suit){
+            case 3:case 4:
+                suitColor = "black";
+                break;
+            case 1:case 2:
+                suitColor = "red";
+                break;
+            default:
+                suitColor = null;
+                break;
+        }
+        return suitColor + separator + rankAsString;
     }
 
     /**

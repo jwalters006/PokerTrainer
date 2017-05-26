@@ -1,5 +1,6 @@
 package com.rallymonkey911.android.pokertrainer;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.content.ContextCompat;
@@ -31,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
             jackClubsImageView, queenClubsImageView, kingClubsImageView, aceSpadesImageView,
             deuceSpadesImageView, threeSpadesImageView, fourSpadesImageView, fiveSpadesImageView,
             sixSpadesImageView, sevenSpadesImageView, eightSpadesImageView, nineSpadesImageView,
-            tenSpadesImageView, jackSpadesImageView, queenSpadesImageView, kingSpadesImageView;
+            tenSpadesImageView, jackSpadesImageView, queenSpadesImageView, kingSpadesImageView,
+            diamondsImageView, heartsImageView, clubsImageView, spadesImageView;
 
     ImageView[] diamondsImageViews, heartsImageViews, clubsImageViews, spadesImageViews;
     ImageView[][] allImageViews = new ImageView[4][13];
@@ -156,6 +158,10 @@ public class MainActivity extends AppCompatActivity {
         jackSpadesImageView = (ImageView) findViewById(R.id.jack_spades);
         queenSpadesImageView = (ImageView) findViewById(R.id.queen_spades);
         kingSpadesImageView = (ImageView) findViewById(R.id.king_spades);
+        diamondsImageView = (ImageView) findViewById(R.id.diamonds);
+        heartsImageView = (ImageView) findViewById(R.id.hearts);
+        clubsImageView = (ImageView) findViewById(R.id.clubs);
+        spadesImageView = (ImageView) findViewById(R.id.spades);
 
         // Find reference to the Button in the layout
         clearButton = (Button) findViewById(R.id.clear_button);
@@ -211,6 +217,11 @@ public class MainActivity extends AppCompatActivity {
         System.arraycopy(heartsImageViews, 0, allImageViews[1], 0, heartsImageViews.length);
         System.arraycopy(clubsImageViews, 0, allImageViews[2], 0, clubsImageViews.length);
         System.arraycopy(spadesImageViews, 0, allImageViews[3], 0, spadesImageViews.length);
+
+        diamondsImageView.setImageResource(R.drawable.diamonds);
+        heartsImageView.setImageResource(R.drawable.hearts);
+        clubsImageView.setImageResource(R.drawable.clubs);
+        spadesImageView.setImageResource(R.drawable.spades);
 
         // Set the corresponding image resource for each of the smaller non-hand card ImageViews
         for (int i = 0; i < Deck.NUM_SUITS; i++) {
@@ -314,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
             for (ImageView cardImageView : new ImageView[]{cardImageView1, cardImageView2,
                     cardImageView3, cardImageView4, cardImageView5}) {
                 if (isBlank(cardImageView)) {
-                    cardImageView.setImageResource(cardToAdd.getmResourceIdSmall());
+                    cardImageView.setImageResource(cardToAdd.getmResourceIdFull());
                     cardImageView.setTag(cardToAdd);
                     setHandText();
                     return true;
@@ -368,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         for (int i = 0; i < hand.size(); i++) {
-            cardImageViews[i].setImageResource(hand.get(i).getmResourceIdSmall());
+            cardImageViews[i].setImageResource(hand.get(i).getmResourceIdFull());
             cardImageViews[i].setTag(hand.get(i));
         }
         setHandText();
