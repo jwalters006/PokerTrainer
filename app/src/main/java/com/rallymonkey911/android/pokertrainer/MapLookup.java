@@ -15,6 +15,11 @@ import java.util.Map;
 
 public class MapLookup {
 
+    public static final String GAME_SELECTION_JACKS = "Jacks or Better";
+    public static final String GAME_SELECTION_DEUCES = "Deuces Wild";
+
+
+
     private MapLookup() {}
 
     public static String lookUpInMap(Context context, String sortedTomHandString,
@@ -26,8 +31,7 @@ public class MapLookup {
         InputStream resource;
         String resourcePrefix;
         String resourceSuffix;
-        if (gameSelected.equals(context.getResources().getStringArray(
-                R.array.game_choices_array)[0])) {
+        if (gameSelected.equals(GAME_SELECTION_JACKS)) {
             resourcePrefix = "test_hash_map_";
         } else {
             resourcePrefix = "dw_map_";

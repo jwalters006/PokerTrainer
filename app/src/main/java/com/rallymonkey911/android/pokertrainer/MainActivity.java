@@ -15,7 +15,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     // Declare all ImageView objects in the layout
     public ImageView cardImageView1, cardImageView2, cardImageView3, cardImageView4, cardImageView5,
@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity{
             tenSpadesImageView, jackSpadesImageView, queenSpadesImageView, kingSpadesImageView;
 
     ImageView[] diamondsImageViews, heartsImageViews, clubsImageViews, spadesImageViews;
+    ImageView[][] allImageViews = new ImageView[4][13];
 
     // Declare all TextView objects in the layout
     public TextView handText, directionsText, cardOneHoldText, cardTwoHoldText, cardThreeHoldText,
@@ -59,7 +60,8 @@ public class MainActivity extends AppCompatActivity{
     // Declare RadioButton objects that will be used to select the appropriate result table
     RadioButton radioButtonJacks, radioButtonDeuces;
 
-    String gameSelected = "Jacks or Better";
+    // Declare variable to hold reference to selected game
+    String gameSelected;
 
     public static final String STATE_PLAYER_HAND = "playerHand";
     public static final String STATE_GAME_SELECTED = "gameSelected";
@@ -162,21 +164,24 @@ public class MainActivity extends AppCompatActivity{
         gameChoiceRadioGroup = (RadioGroup) findViewById(R.id.game_choice_radio_group);
 
         // Find reference to the radioButton's in the layout
-        radioButtonJacks = (RadioButton)findViewById(R.id.radio_button_jacks);
-        radioButtonDeuces = (RadioButton)findViewById(R.id.radio_button_deuces);
+        radioButtonJacks = (RadioButton) findViewById(R.id.radio_button_jacks);
+        radioButtonDeuces = (RadioButton) findViewById(R.id.radio_button_deuces);
+
+        // Set the default game selection
+        gameSelected = MapLookup.GAME_SELECTION_JACKS;
 
         // Set response for RadioButton's via RadioGroup listener
         gameChoiceRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                switch (checkedId){
+                switch (checkedId) {
                     case R.id.radio_button_jacks:
-                        gameSelected = "Jacks or Better";
+                        gameSelected = MapLookup.GAME_SELECTION_JACKS;
                         break;
                     case R.id.radio_button_deuces:
-                        gameSelected = "Deuces Wild";
+                        gameSelected = MapLookup.GAME_SELECTION_DEUCES;
                 }
-                if (hand.size() == 5){
+                if (hand.size() == 5) {
                     detectWinningHand();
                 }
             }
@@ -202,7 +207,6 @@ public class MainActivity extends AppCompatActivity{
                 threeSpadesImageView, fourSpadesImageView, fiveSpadesImageView, sixSpadesImageView,
                 sevenSpadesImageView, eightSpadesImageView, nineSpadesImageView, tenSpadesImageView,
                 jackSpadesImageView, queenSpadesImageView, kingSpadesImageView};
-        ImageView[][] allImageViews = new ImageView[4][13];
         System.arraycopy(diamondsImageViews, 0, allImageViews[0], 0, diamondsImageViews.length);
         System.arraycopy(heartsImageViews, 0, allImageViews[1], 0, heartsImageViews.length);
         System.arraycopy(clubsImageViews, 0, allImageViews[2], 0, clubsImageViews.length);
@@ -246,7 +250,7 @@ public class MainActivity extends AppCompatActivity{
                     @Override
                     public void onClick(View v) {
                         if (!hand.contains(currentCard)) {
-                            if (hand.size() < PokerAsyncTask.NUMBER_OF_CARDS_IN_FULL_HAND){
+                            if (hand.size() < PokerAsyncTask.NUMBER_OF_CARDS_IN_FULL_HAND) {
                                 currentImageView.setAlpha(SEMI_TRANSPARENT);
                             }
                             addCardToHand(currentCard);
@@ -269,22 +273,30 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        // Recover state of all objects if the activity is restarted
         if (savedInstanceState != null) {
             ArrayList<Card> handCopy = (ArrayList<Card>) savedInstanceState.getSerializable(
                     STATE_PLAYER_HAND);
-
             gameSelected = savedInstanceState.getString(STATE_GAME_SELECTED);
-
-            switch(gameSelected){
-                case "Jacks or Better":
+            
+            switch (gameSelected) {
+                case MapLookup.GAME_SELECTION_JACKS:
                     gameChoiceRadioGroup.check(R.id.radio_button_jacks);
                     break;
-                case "Deuces Wild":
+                case MapLookup.GAME_SELECTION_DEUCES:
                     gameChoiceRadioGroup.check(R.id.radio_button_deuces);
             }
 
-            for (Card card: handCopy) {
-                addCardToHand(card);
+            for (Card card : handCopy) {
+                for (int i = 0; i < Deck.NUM_SUITS; i++) {
+                    for (int j = 0; j < Deck.NUM_RANKS; j++) {
+                        Card cardFromImageView = (Card) allImageViews[i][j].getTag();
+                        if (cardFromImageView.toString().equals(card.toString())) {
+                            allImageViews[i][j].performClick();
+                            break;
+                        }
+                    }
+                }
             }
         }
     }

@@ -8,17 +8,32 @@
     android:layout_height="match_parent"
     tools:context="com.rallymonkey911.android.pokertrainer.MainActivity">
 
-    <Spinner
-        android:id="@+id/game_choice_spinner"
-        android:layout_width="fill_parent"
+    <RadioGroup
+        android:id="@+id/game_choice_radio_group"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"></Spinner>
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radio_button_jacks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jacks or Better" />
+
+        <RadioButton
+            android:id="@+id/radio_button_deuces"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deuces Wild" />
+
+    </RadioGroup>
 
     <LinearLayout
         android:id="@+id/message_text_views"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/game_choice_spinner">
+        android:layout_below="@id/game_choice_radio_group">
 
         <TextView
             android:id="@+id/hand_text"
@@ -102,11 +117,11 @@
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
             android:id="@+id/hint_hold_text_views"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
         </LinearLayout>
 
