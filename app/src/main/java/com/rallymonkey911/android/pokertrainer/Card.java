@@ -23,10 +23,10 @@ public class Card implements Comparable<Card> {
     private int mResourceIdSmall;
 
     /** Kinds of suits */
-    final static int DIAMONDS     = 1;
+    final static int SPADES     = 1;
     final static int HEARTS       = 2;
-    final static int CLUBS        = 3;
-    final static int SPADES       = 4;
+    final static int DIAMONDS        = 3;
+    final static int CLUBS       = 4;
 
     /** Kinds of ranks */
     final static int ACE         = 1;
@@ -103,7 +103,7 @@ public class Card implements Comparable<Card> {
      * @return whether the suit is valid
      */
     private static boolean isValidSuit(int suit) {
-        return DIAMONDS <= suit && suit <= SPADES;
+        return SPADES <= suit && suit <= CLUBS;
     }
 
     /**
@@ -172,16 +172,16 @@ public class Card implements Comparable<Card> {
 
         switch (getmSuit()){
             case 1:
-                suitAsString = "D";
+                suitAsString = "S";
                 break;
             case 2:
                 suitAsString = "H";
                 break;
             case 3:
-                suitAsString = "C";
+                suitAsString = "D";
                 break;
             default:
-                suitAsString = "S";
+                suitAsString = "C";
                 break;
         }
 
@@ -194,16 +194,16 @@ public class Card implements Comparable<Card> {
 
         switch (getmSuit()) {
             case 1:
-                suitAsString = "D";
+                suitAsString = "S";
                 break;
             case 2:
                 suitAsString = "H";
                 break;
             case 3:
-                suitAsString = "C";
+                suitAsString = "D";
                 break;
             default:
-                suitAsString = "S";
+                suitAsString = "C";
                 break;
         }
 

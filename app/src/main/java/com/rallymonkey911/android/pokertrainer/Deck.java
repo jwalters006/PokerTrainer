@@ -28,7 +28,7 @@ class Deck {
     Deck(Context context) {
 
         cards = new Card[NUM_SUITS][NUM_RANKS];
-        for (int suit = Card.DIAMONDS; suit <= Card.SPADES; suit++) {
+        for (int suit = Card.SPADES; suit <= Card.CLUBS; suit++) {
             for (int rank = Card.ACE; rank <= Card.KING; rank++) {
                 int resIdFull = context.getResources().getIdentifier(RES_FILE_PATH +
                                 getCardFileName(suit, rank) + "_cropped", null,
@@ -55,13 +55,13 @@ class Deck {
         String separator = "_";
 
         switch (suit){
-            case 1:     suitAsString = "d";
+            case 1:     suitAsString = "s";
                         break;
             case 2:     suitAsString = "h";
                         break;
-            case 3:     suitAsString = "c";
+            case 3:     suitAsString = "d";
                         break;
-            case 4:     suitAsString = "s";
+            case 4:     suitAsString = "c";
                         break;
             default:    suitAsString = null;
                         break;
@@ -75,10 +75,10 @@ class Deck {
         String separator = "_";
 
         switch(suit){
-            case 3:case 4:
+            case 1:case 4:
                 suitColor = "black";
                 break;
-            case 1:case 2:
+            case 2:case 3:
                 suitColor = "red";
                 break;
             default:

@@ -68,8 +68,7 @@
 
         <LinearLayout
             android:id="@+id/diamonds_row"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            style="@style/smallCardRow">
 
             <ImageView
                 android:id="@+id/diamonds"
@@ -159,8 +158,7 @@
 
         <LinearLayout
             android:id="@+id/hearts_row"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            style="@style/smallCardRow">
 
             <ImageView
                 android:id="@+id/hearts"
@@ -250,8 +248,7 @@
 
         <LinearLayout
             android:id="@+id/clubs_row"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            style="@style/smallCardRow">
 
             <ImageView
                 android:id="@+id/clubs"
@@ -341,8 +338,7 @@
 
         <LinearLayout
             android:id="@+id/spades_row"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            style="@style/smallCardRow">
 
             <ImageView
                 android:id="@+id/spades"

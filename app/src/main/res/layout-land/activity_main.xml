@@ -149,6 +149,12 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/diamonds"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/card_height_small"
+                android:layout_weight="1" />
+
+            <ImageView
                 android:id="@+id/ace_diamonds"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/card_height_small"
@@ -222,6 +228,12 @@
 
             <ImageView
                 android:id="@+id/king_diamonds"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/card_height_small"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/hearts"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/card_height_small"
                 android:layout_weight="1" />
@@ -313,6 +325,12 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/clubs"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/card_height_small"
+                android:layout_weight="1" />
+
+            <ImageView
                 android:id="@+id/ace_clubs"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/card_height_small"
@@ -386,6 +404,11 @@
 
             <ImageView
                 android:id="@+id/king_clubs"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/card_height_small"
+                android:layout_weight="1" />
+            <ImageView
+                android:id="@+id/spades"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/card_height_small"
                 android:layout_weight="1" />

@@ -1,6 +1,7 @@
 package com.rallymonkey911.android.pokertrainer;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -24,6 +25,8 @@ public class MapLookup {
 
     public static String lookUpInMap(Context context, String sortedTomHandString,
                                      String gameSelected) {
+        Log.v("lookUpInMap ", "sortedTomHandString: "+sortedTomHandString);
+        Log.v("lookUpInMap ", "gameSelected: " + gameSelected);
         String firstCard = sortedTomHandString.substring(0,PokerAsyncTask.CODE_LENGTH_ONE_CARD);
         String secondCard = sortedTomHandString.substring(PokerAsyncTask.CODE_LENGTH_ONE_CARD,
                 PokerAsyncTask.CODE_LENGTH_ONE_CARD*2);
@@ -394,7 +397,11 @@ public class MapLookup {
             in.close();
             bufferedFileIn.close();
             resource.close();
+            Log.v("MapLookUp ", "sortedTomHandString " + sortedTomHandString);
             String result = (String) map.get(sortedTomHandString);
+            if (result == null){
+                Log.v("MapLookUp ", "result is null!!!");
+            }
             map = null;
             return result;
         } catch (IOException i) {

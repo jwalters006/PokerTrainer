@@ -213,10 +213,12 @@ public class MainActivity extends AppCompatActivity {
                 threeSpadesImageView, fourSpadesImageView, fiveSpadesImageView, sixSpadesImageView,
                 sevenSpadesImageView, eightSpadesImageView, nineSpadesImageView, tenSpadesImageView,
                 jackSpadesImageView, queenSpadesImageView, kingSpadesImageView};
-        System.arraycopy(diamondsImageViews, 0, allImageViews[0], 0, diamondsImageViews.length);
+
+        System.arraycopy(spadesImageViews, 0, allImageViews[0], 0, spadesImageViews.length);
         System.arraycopy(heartsImageViews, 0, allImageViews[1], 0, heartsImageViews.length);
-        System.arraycopy(clubsImageViews, 0, allImageViews[2], 0, clubsImageViews.length);
-        System.arraycopy(spadesImageViews, 0, allImageViews[3], 0, spadesImageViews.length);
+        System.arraycopy(diamondsImageViews, 0, allImageViews[2], 0, diamondsImageViews.length);
+        System.arraycopy(clubsImageViews, 0, allImageViews[3], 0, clubsImageViews.length);
+
 
         diamondsImageView.setImageResource(R.drawable.diamonds);
         heartsImageView.setImageResource(R.drawable.hearts);
