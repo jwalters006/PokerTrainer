@@ -1,22 +1,23 @@
 package com.rallymonkey911.android.pokertrainer;
 
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+public class MainActivity extends AppCompatActivity{
 
     // Declare all ImageView objects in the layout
     public ImageView cardImageView1, cardImageView2, cardImageView3, cardImageView4, cardImageView5,
@@ -54,10 +55,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     // contains four-of-a-kind or a full-house.
     boolean bypassMapLookUpAndHoldAll;
 
-    // Declare Spinner object that will be used to select the appropriate result table
-    Spinner gameChoiceSpinner;
+    // Declare RadioGroup object that will be used to hold RadioButton objects
+    RadioGroup gameChoiceRadioGroup;
 
-    String gameSelected = null;
+    // Declare RadioButton objects that will be used to select the appropriate result table
+    RadioButton radioButtonJacks, radioButtonDeuces;
+
+    String gameSelected = "Jacks or Better";
 
     public static final String STATE_PLAYER_HAND = "playerHand";
     public static final String STATE_GAME_SELECTED = "gameSelected";
@@ -156,21 +160,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Find reference to the Button in the layout
         clearButton = (Button) findViewById(R.id.clear_button);
 
-        // Find reference to the Spinner in the layout
-        gameChoiceSpinner = (Spinner) findViewById(R.id.game_choice_spinner);
+        // Find reference to the radioGroup in the layout
+        gameChoiceRadioGroup = (RadioGroup) findViewById(R.id.game_choice_radio_group);
 
-        // Create an ArrayAdapter using a string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this, R.array.game_choices_array, android.R.layout.simple_spinner_item);
+        // Find reference to the radioButton's in the layout
+        radioButtonJacks = (RadioButton)findViewById(R.id.radio_button_jacks);
+        radioButtonDeuces = (RadioButton)findViewById(R.id.radio_button_deuces);
 
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // Apply the adapter to the spinner
-        gameChoiceSpinner.setAdapter(adapter);
-
-        // Set the listener for the spinner
-        gameChoiceSpinner.setOnItemSelectedListener(this);
+        // Set response for RadioButton's via RadioGroup listener
+        gameChoiceRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                switch (checkedId){
+                    case R.id.radio_button_jacks:
+                        gameSelected = "Jacks or Better";
+                        break;
+                    case R.id.radio_button_deuces:
+                        gameSelected = "Deuces Wild";
+                }
+                if (hand.size() == 5){
+                    detectWinningHand();
+                }
+            }
+        });
 
         // Store references to all of the non-hand card ImageViews in arrays for convenient
         // processing in a loop below.
@@ -248,6 +260,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         }
 
+        // Set default selection of game to "Jacks or Better" via RadioButton selection
+        gameChoiceRadioGroup.check(R.id.radio_button_jacks);
+
         // Set the OnClickListener for the clear Button
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -259,7 +274,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (savedInstanceState != null) {
             ArrayList<Card> handCopy = (ArrayList<Card>) savedInstanceState.getSerializable(
                     STATE_PLAYER_HAND);
+
             gameSelected = savedInstanceState.getString(STATE_GAME_SELECTED);
+
+            switch(gameSelected){
+                case "Jacks or Better":
+                    gameChoiceRadioGroup.check(R.id.radio_button_jacks);
+                    break;
+                case "Deuces Wild":
+                    gameChoiceRadioGroup.check(R.id.radio_button_deuces);
+            }
+
             for (Card card: handCopy) {
                 addCardToHand(card);
             }
@@ -271,19 +296,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onSaveInstanceState(outState);
         outState.putSerializable(STATE_PLAYER_HAND, hand);
         outState.putString(STATE_GAME_SELECTED, gameSelected);
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        gameSelected = (String) parent.getItemAtPosition(position);
-        setHandText();
-        Log.v("Retrieving selection ", (String) parent.getItemAtPosition(position));
-        Log.v("test", getResources().getStringArray(R.array.game_choices_array)[position]);
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        gameSelected = (String) parent.getItemAtPosition(0);
     }
 
     public boolean addCardToHand(Card cardToAdd) {
