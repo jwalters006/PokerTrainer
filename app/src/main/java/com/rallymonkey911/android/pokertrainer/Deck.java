@@ -23,7 +23,7 @@ class Deck {
      * Constructor for deck of cards, consisting of 52 {@link Card} objects in a multidimensional
      * array.  The deck is built using a nested "for" loop to assign values to each Card.  In
      * addition, each Card object is assigned a resource ID (referring to a .PNG image file).
-     * @param context The current context ({@link MainActivity})
+     * @param context The current context ({@link LookupActivity})
      */
     Deck(Context context) {
 

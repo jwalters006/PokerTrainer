@@ -20,8 +20,8 @@
     <string name="hand_full">Hand is full. Click a card in the hand to discard it, or press the
         clear button to clear the hand</string>
     <string name="card_selected_singular">
-        <xliff:g id="count" example="1">%d</xliff:g>
+        <xliff:g example="1" id="count">%d</xliff:g>
         card is selected</string>
-    <string name="cards_selected_plural"><xliff:g id="count" example="2">%d</xliff:g>
+    <string name="cards_selected_plural"><xliff:g example="2" id="count">%d</xliff:g>
          cards are selected</string>
 </resources>

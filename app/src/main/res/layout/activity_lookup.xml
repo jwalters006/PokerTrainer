@@ -3,16 +3,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.rallymonkey911.android.pokertrainer.MainActivity">
+    tools:context="com.rallymonkey911.android.pokertrainer.LookupActivity">
 
     <RadioGroup
         android:id="@+id/game_choice_radio_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:orientation="horizontal">
 
         <RadioButton
@@ -29,104 +27,28 @@
 
     </RadioGroup>
 
-    <LinearLayout
-        android:id="@+id/message_text_views"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/hand_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/game_choice_radio_group">
+        android:layout_below="@id/game_choice_radio_group"
+        android:layout_centerHorizontal="true"
+        android:text="@string/default__hand_text"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/hand_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/default__hand_text"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/directions_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text=""
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/actual_and_hint_hold_views"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/directions_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/message_text_views">
+        android:layout_below="@+id/hand_text"
+        android:layout_centerHorizontal="true"
+        android:text=""
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
-
-        <LinearLayout
-            android:id="@+id/hold_text_views"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/card_one_hold"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="@dimen/horizontal_spacing"
-                android:layout_weight="1"
-                android:text="HOLD"
-                android:visibility="invisible" />
-
-            <TextView
-                android:id="@+id/card_two_hold"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/horizontal_spacing"
-                android:layout_weight="1"
-                android:text="HOLD"
-                android:visibility="invisible" />
-
-            <TextView
-                android:id="@+id/card_three_hold"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/horizontal_spacing"
-                android:layout_weight="1"
-                android:text="HOLD"
-                android:visibility="invisible" />
-
-            <TextView
-                android:id="@+id/card_four_hold"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/horizontal_spacing"
-                android:layout_weight="1"
-                android:text="HOLD"
-                android:visibility="invisible" />
-
-            <TextView
-                android:id="@+id/card_five_hold"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/horizontal_spacing"
-                android:layout_weight="1"
-                android:text="HOLD"
-                android:visibility="invisible" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/hint_hold_text_views"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-        </LinearLayout>
-
-
-    </LinearLayout>
 
     <Button
         android:id="@+id/clear_button"
@@ -144,9 +66,8 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/diamonds_hearts_row"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:id="@+id/diamonds_row"
+            style="@style/smallCardRow">
 
             <ImageView
                 android:id="@+id/diamonds"
@@ -231,6 +152,12 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/card_height_small"
                 android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/hearts_row"
+            style="@style/smallCardRow">
 
             <ImageView
                 android:id="@+id/hearts"
@@ -318,11 +245,9 @@
 
         </LinearLayout>
 
-
         <LinearLayout
-            android:id="@+id/clubs_spades_row"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:id="@+id/clubs_row"
+            style="@style/smallCardRow">
 
             <ImageView
                 android:id="@+id/clubs"
@@ -407,6 +332,13 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/card_height_small"
                 android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/spades_row"
+            style="@style/smallCardRow">
+
             <ImageView
                 android:id="@+id/spades"
                 android:layout_width="0dp"
@@ -490,70 +422,111 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/card_height_small"
                 android:layout_weight="1" />
-
         </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/actual_and_hint_hands"
+        android:id="@+id/card_hand"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/actual_and_hint_hold_views">
+        android:layout_above="@id/rows_parent"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/card_hand"
+        <ImageView
+            android:id="@+id/card_one"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/card_height"
+            android:layout_marginLeft="@dimen/horizontal_spacing"
+            android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
+            android:contentDescription="@string/card_image" />
+
+        <ImageView
+            android:id="@+id/card_two"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/card_height"
+            android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
+            android:contentDescription="@string/card_image" />
+
+        <ImageView
+            android:id="@+id/card_three"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/card_height"
+            android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
+            android:contentDescription="@string/card_image" />
+
+        <ImageView
+            android:id="@+id/card_four"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/card_height"
+            android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
+            android:contentDescription="@string/card_image" />
+
+        <ImageView
+            android:id="@+id/card_five"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/card_height"
+            android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
+            android:contentDescription="@string/card_image" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/card_hand"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/card_one_hold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="@dimen/horizontal_spacing"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:text="HOLD"
+            android:visibility="invisible" />
 
-            <ImageView
-                android:id="@+id/card_one"
-                style="@style/handCardSmall"
-                android:layout_width="0dp"
-                android:layout_marginLeft="@dimen/horizontal_spacing"
-                android:layout_weight="1"
-                android:contentDescription="@string/card_image" />
-
-            <ImageView
-                android:id="@+id/card_two"
-                style="@style/handCardSmall"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:contentDescription="@string/card_image" />
-
-            <ImageView
-                android:id="@+id/card_three"
-                style="@style/handCardSmall"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:contentDescription="@string/card_image" />
-
-            <ImageView
-                android:id="@+id/card_four"
-                style="@style/handCardSmall"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:contentDescription="@string/card_image" />
-
-            <ImageView
-                android:id="@+id/card_five"
-                style="@style/handCardSmall"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:contentDescription="@string/card_image" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/hint_hand"
+        <TextView
+            android:id="@+id/card_two_hold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/horizontal_spacing"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:text="HOLD"
+            android:visibility="invisible" />
 
-        </LinearLayout>
+        <TextView
+            android:id="@+id/card_three_hold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
+            android:text="HOLD"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/card_four_hold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
+            android:text="HOLD"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/card_five_hold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/horizontal_spacing"
+            android:layout_weight="1"
+            android:text="HOLD"
+            android:visibility="invisible" />
 
     </LinearLayout>
 
