@@ -9,7 +9,7 @@
     </style>
 
     <style name="handCardSmall">
-        <item name="android:layout_height">@dimen/card_height_small</item>
+        <item name="android:layout_height">@dimen/card_height_medium</item>
         <item name="android:layout_marginRight">@dimen/horizontal_spacing</item>
     </style>
 

@@ -86,6 +86,37 @@ class Hand {
         return null;
     }
 
+    static boolean isJacksOrBetterPair(List<String> hand) {
+        int numberOfJacks = 0;
+        int numberOfQueens = 0;
+        int numberOfKings = 0;
+        int numberOfAces = 0;
+
+        List<Integer> ranks = Hand.cardRanks(hand);
+
+        for (int rank : ranks) {
+            if (rank == Card.JACK){
+                numberOfJacks++;
+            } else if (rank == Card.QUEEN){
+                numberOfQueens++;
+            } else if (rank == Card.KING){
+                numberOfKings++;
+            } else if (rank == Card.ACE || rank == Card.HIGH_ACE){
+                numberOfAces++;
+            }
+        }
+
+        if (    numberOfJacks == 2 ||
+                numberOfQueens == 2 ||
+                numberOfKings == 2 ||
+                numberOfAces == 2) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
     public static String sortedTomHandString(List<Card>hand){
         StringBuilder handTomStringSorted = new StringBuilder();
         List<Card> handCopy = new ArrayList<>(hand);

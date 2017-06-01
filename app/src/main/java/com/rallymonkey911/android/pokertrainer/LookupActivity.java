@@ -62,13 +62,13 @@ public class LookupActivity extends AppCompatActivity {
     boolean bypassMapLookUpAndHoldAll;
 
     // Declare RadioGroup object that will be used to hold RadioButton objects
-    RadioGroup gameChoiceRadioGroup;
+    private RadioGroup gameChoiceRadioGroup;
 
     // Declare RadioButton objects that will be used to select the appropriate result table
-    RadioButton radioButtonJacks, radioButtonDeuces;
+    private RadioButton radioButtonJacks, radioButtonDeuces;
 
     // Declare variable to hold reference to selected game
-    String gameSelected;
+    private String gameSelected;
 
     public static final String STATE_PLAYER_HAND = "playerHand";
     public static final String STATE_GAME_SELECTED = "gameSelected";
@@ -87,14 +87,14 @@ public class LookupActivity extends AppCompatActivity {
         hand = new ArrayList<>();
 
         // Find reference to TextViews in the layout
-        handText = (TextView) findViewById(R.id.hand_text);
-        directionsText = (TextView) findViewById(R.id.directions_text);
+        handText = (TextView) findViewById(R.id.lookup_hand_text);
+        directionsText = (TextView) findViewById(R.id.lookup_directions_text);
 
-        cardOneHoldText = (TextView) findViewById(R.id.card_one_hold);
-        cardTwoHoldText = (TextView) findViewById(R.id.card_two_hold);
-        cardThreeHoldText = (TextView) findViewById(R.id.card_three_hold);
-        cardFourHoldText = (TextView) findViewById(R.id.card_four_hold);
-        cardFiveHoldText = (TextView) findViewById(R.id.card_five_hold);
+        cardOneHoldText = (TextView) findViewById(R.id.lookup_card_one_hold);
+        cardTwoHoldText = (TextView) findViewById(R.id.lookup_card_two_hold);
+        cardThreeHoldText = (TextView) findViewById(R.id.lookup_card_three_hold);
+        cardFourHoldText = (TextView) findViewById(R.id.lookup_card_four_hold);
+        cardFiveHoldText = (TextView) findViewById(R.id.lookup_card_five_hold);
         holdTextViewLabels[0] = cardOneHoldText;
         holdTextViewLabels[1] = cardTwoHoldText;
         holdTextViewLabels[2] = cardThreeHoldText;
@@ -105,11 +105,11 @@ public class LookupActivity extends AppCompatActivity {
         handText.setVisibility(View.GONE);
 
         // Find reference to ImageView's in the layout
-        cardImageView1 = (ImageView) findViewById(R.id.card_one);
-        cardImageView2 = (ImageView) findViewById(R.id.card_two);
-        cardImageView3 = (ImageView) findViewById(R.id.card_three);
-        cardImageView4 = (ImageView) findViewById(R.id.card_four);
-        cardImageView5 = (ImageView) findViewById(R.id.card_five);
+        cardImageView1 = (ImageView) findViewById(R.id.lookup_card_one);
+        cardImageView2 = (ImageView) findViewById(R.id.lookup_card_two);
+        cardImageView3 = (ImageView) findViewById(R.id.lookup_card_three);
+        cardImageView4 = (ImageView) findViewById(R.id.lookup_card_four);
+        cardImageView5 = (ImageView) findViewById(R.id.lookup_card_five);
         aceDiamondsImageView = (ImageView) findViewById(R.id.ace_diamonds);
         deuceDiamondsImageView = (ImageView) findViewById(R.id.deuce_diamonds);
         threeDiamondsImageView = (ImageView) findViewById(R.id.three_diamonds);
@@ -168,14 +168,14 @@ public class LookupActivity extends AppCompatActivity {
         spadesImageView = (ImageView) findViewById(R.id.spades);
 
         // Find reference to the Button in the layout
-        clearButton = (Button) findViewById(R.id.clear_button);
+        clearButton = (Button) findViewById(R.id.lookup_clear_button);
 
         // Find reference to the radioGroup in the layout
-        gameChoiceRadioGroup = (RadioGroup) findViewById(R.id.game_choice_radio_group);
+        gameChoiceRadioGroup = (RadioGroup) findViewById(R.id.lookup_game_choice_radio_group);
 
         // Find reference to the radioButton's in the layout
-        radioButtonJacks = (RadioButton) findViewById(R.id.radio_button_jacks);
-        radioButtonDeuces = (RadioButton) findViewById(R.id.radio_button_deuces);
+        radioButtonJacks = (RadioButton) findViewById(R.id.lookup_radio_button_jacks);
+        radioButtonDeuces = (RadioButton) findViewById(R.id.lookup_radio_button_deuces);
 
         // Set the default game selection
         gameSelected = MapLookup.GAME_SELECTION_JACKS;
@@ -185,10 +185,10 @@ public class LookupActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 switch (checkedId) {
-                    case R.id.radio_button_jacks:
+                    case R.id.lookup_radio_button_jacks:
                         gameSelected = MapLookup.GAME_SELECTION_JACKS;
                         break;
-                    case R.id.radio_button_deuces:
+                    case R.id.lookup_radio_button_deuces:
                         gameSelected = MapLookup.GAME_SELECTION_DEUCES;
                 }
                 if (hand.size() == 5) {
@@ -280,7 +280,7 @@ public class LookupActivity extends AppCompatActivity {
         }
 
         // Set default selection of game to "Jacks or Better" via RadioButton selection
-        gameChoiceRadioGroup.check(R.id.radio_button_jacks);
+        gameChoiceRadioGroup.check(R.id.lookup_radio_button_jacks);
 
         // Set the OnClickListener for the clear Button
         clearButton.setOnClickListener(new View.OnClickListener() {
@@ -298,10 +298,10 @@ public class LookupActivity extends AppCompatActivity {
             
             switch (gameSelected) {
                 case MapLookup.GAME_SELECTION_JACKS:
-                    gameChoiceRadioGroup.check(R.id.radio_button_jacks);
+                    gameChoiceRadioGroup.check(R.id.lookup_radio_button_jacks);
                     break;
                 case MapLookup.GAME_SELECTION_DEUCES:
-                    gameChoiceRadioGroup.check(R.id.radio_button_deuces);
+                    gameChoiceRadioGroup.check(R.id.lookup_radio_button_deuces);
             }
 
             for (Card card : handCopy) {

@@ -7,5 +7,8 @@
     <dimen name="card_width_small">26dp</dimen>
     <dimen name="card_height_small">24dp</dimen>
 
+    <dimen name="card_width_medium">26dp</dimen>
+    <dimen name="card_height_medium">48dp</dimen>
+
 
 </resources>
