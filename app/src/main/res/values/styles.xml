@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="handCardSmall">
+    <style name="handCardLandscape">
         <item name="android:layout_height">@dimen/card_height_medium</item>
         <item name="android:layout_marginRight">@dimen/horizontal_spacing</item>
     </style>

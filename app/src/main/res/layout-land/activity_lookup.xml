@@ -33,9 +33,9 @@
         android:id="@+id/message_text_views"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lookup_game_choice_radio_group"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/lookup_game_choice_radio_group">
 
         <TextView
             android:id="@+id/lookup_hand_text"
@@ -52,6 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text=""
+            android:textAlignment="center"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -122,7 +123,7 @@
             android:id="@+id/hint_hold_text_views"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0"
             android:orientation="horizontal">
 
         </LinearLayout>
@@ -409,6 +410,7 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/card_height_small"
                 android:layout_weight="1" />
+
             <ImageView
                 android:id="@+id/spades"
                 android:layout_width="0dp"
@@ -512,7 +514,7 @@
 
             <ImageView
                 android:id="@+id/lookup_card_one"
-                style="@style/handCardSmall"
+                style="@style/handCardLandscape"
                 android:layout_width="0dp"
                 android:layout_marginLeft="@dimen/horizontal_spacing"
                 android:layout_weight="1"
@@ -520,28 +522,28 @@
 
             <ImageView
                 android:id="@+id/lookup_card_two"
-                style="@style/handCardSmall"
+                style="@style/handCardLandscape"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/card_image" />
 
             <ImageView
                 android:id="@+id/lookup_card_three"
-                style="@style/handCardSmall"
+                style="@style/handCardLandscape"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/card_image" />
 
             <ImageView
                 android:id="@+id/lookup_card_four"
-                style="@style/handCardSmall"
+                style="@style/handCardLandscape"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/card_image" />
 
             <ImageView
                 android:id="@+id/lookup_card_five"
-                style="@style/handCardSmall"
+                style="@style/handCardLandscape"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/card_image" />
@@ -552,7 +554,7 @@
             android:id="@+id/hint_hand"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0"
             android:orientation="horizontal">
 
         </LinearLayout>
