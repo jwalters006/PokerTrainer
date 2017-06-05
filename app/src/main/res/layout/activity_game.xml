@@ -143,6 +143,41 @@
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/bet_wallet_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/bet_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="80dp" />
+
+        <TextView
+            android:id="@+id/bet_amount_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/bet_text" />
+
+        <TextView
+            android:id="@+id/wallet_amount_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="80dp" />
+
+        <TextView
+            android:id="@+id/wallet_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/wallet_amount_text" />
+
+    </RelativeLayout>
+
+
     <LinearLayout
         android:id="@+id/button_parent"
         android:layout_width="match_parent"
@@ -285,5 +320,5 @@
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold" />
-    
+
 </RelativeLayout>

@@ -10,6 +10,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,7 +28,8 @@ public class GameActivity extends AppCompatActivity {
     public TextView gameCardHoldText1, gameCardHoldText2, gameCardHoldText3,
             gameCardHoldText4, gameCardHoldText5, gameHandText, gameHintCardHoldText1,
             gameHintCardHoldText2, gameHintCardHoldText3, gameHintCardHoldText4,
-            gameHintCardHoldText5, gameHintHandText;
+            gameHintCardHoldText5, gameHintHandText, betText, betAmountText, walletText,
+            walletAmountText;
     TextView[] gameCardHoldTextViews, gameHintCardHoldTextViews;
 
     boolean[] isHold = new boolean[HAND_SIZE];
@@ -36,6 +39,8 @@ public class GameActivity extends AppCompatActivity {
     private Button hintButton;
 
     private Random rand;
+
+    private int bet, wallet;
 
     private Deck deck;
 
@@ -81,6 +86,7 @@ public class GameActivity extends AppCompatActivity {
             isHold[i] = false;
         }
 
+        // Find references to all ImageViews in the layout
         gameCardImageView1 = (ImageView) findViewById(R.id.game_card_one);
         gameCardImageView2 = (ImageView) findViewById(R.id.game_card_two);
         gameCardImageView3 = (ImageView) findViewById(R.id.game_card_three);
@@ -91,6 +97,8 @@ public class GameActivity extends AppCompatActivity {
         gameHintCardImageView3 = (ImageView) findViewById(R.id.game_hint_card_three);
         gameHintCardImageView4 = (ImageView) findViewById(R.id.game_hint_card_four);
         gameHintCardImageView5 = (ImageView) findViewById(R.id.game_hint_card_five);
+
+        // Find references to all TextViews in the layout
         gameCardHoldText1 = (TextView) findViewById(R.id.game_card_one_hold);
         gameCardHoldText2 = (TextView) findViewById(R.id.game_card_two_hold);
         gameCardHoldText3 = (TextView) findViewById(R.id.game_card_three_hold);
@@ -101,15 +109,27 @@ public class GameActivity extends AppCompatActivity {
         gameHintCardHoldText3 = (TextView) findViewById(R.id.game_hint_card_three_hold);
         gameHintCardHoldText4 = (TextView) findViewById(R.id.game_hint_card_four_hold);
         gameHintCardHoldText5 = (TextView) findViewById(R.id.game_hint_card_five_hold);
-
         gameHandText = (TextView) findViewById(R.id.game_hand_text);
         gameHintHandText = (TextView) findViewById(R.id.game_hint_hand_text);
+        betText = (TextView) findViewById(R.id.bet_text);
+        betAmountText = (TextView) findViewById(R.id.bet_amount_text);
+        walletText = (TextView) findViewById(R.id.wallet_text);
+        walletAmountText = (TextView) findViewById(R.id.wallet_amount_text);
 
+        // Find references to all Buttons in the layout
         drawButton = (Button) findViewById(R.id.draw_button);
         dealButton = (Button) findViewById(R.id.deal_button);
         hintButton = (Button) findViewById(R.id.hint_button);
-        toggleViewClickability(dealButton);
 
+        // Find reference to the radioGroup in the layout
+        gameChoiceRadioGroup = (RadioGroup) findViewById(R.id.game_game_choice_radio_group);
+
+        // Find reference to the radioButton's in the layout
+        radioButtonJacks = (RadioButton) findViewById(R.id.game_radio_button_jacks);
+        radioButtonDeuces = (RadioButton) findViewById(R.id.game_radio_button_deuces);
+
+
+        // Create arrays to hold ImageViews
         gameCardImageViews = new ImageView[HAND_SIZE];
         gameCardImageViews[0] = gameCardImageView1;
         gameCardImageViews[1] = gameCardImageView2;
@@ -123,6 +143,7 @@ public class GameActivity extends AppCompatActivity {
         gameHintCardImageViews[3] = gameHintCardImageView4;
         gameHintCardImageViews[4] = gameHintCardImageView5;
 
+        // Create arrays to hold TextViews
         gameCardHoldTextViews = new TextView[HAND_SIZE];
         gameCardHoldTextViews[0] = gameCardHoldText1;
         gameCardHoldTextViews[1] = gameCardHoldText2;
@@ -136,82 +157,43 @@ public class GameActivity extends AppCompatActivity {
         gameHintCardHoldTextViews[3] = gameHintCardHoldText4;
         gameHintCardHoldTextViews[4] = gameHintCardHoldText5;
 
-        // Find reference to the radioGroup in the layout
-        gameChoiceRadioGroup = (RadioGroup) findViewById(R.id.game_game_choice_radio_group);
 
-        // Find reference to the radioButton's in the layout
-        radioButtonJacks = (RadioButton) findViewById(R.id.game_radio_button_jacks);
-        radioButtonDeuces = (RadioButton) findViewById(R.id.game_radio_button_deuces);
-
-        // Set the default game selection
-        gameSelected = MapLookup.GAME_SELECTION_JACKS;
-
-        // Set response for RadioButton's via RadioGroup listener
-        gameChoiceRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                switch (checkedId) {
-                    case R.id.game_radio_button_jacks:
-                        gameSelected = MapLookup.GAME_SELECTION_JACKS;
-                        break;
-                    case R.id.game_radio_button_deuces:
-                        gameSelected = MapLookup.GAME_SELECTION_DEUCES;
-                }
-                if (isHintShown) {
-                    lookUpRecommendedCardsToHold(hintHand);
-                }
-            }
-        });
-
-        // Set default selection of game to "Jacks or Better" via RadioButton selection
-        gameChoiceRadioGroup.check(R.id.game_radio_button_jacks);
-
-        for (int i = 0; i < HAND_SIZE; i++) {
-            hand.add(removeRandomCardFromDeckCopy());
-            gameCardImageViews[i].setImageResource(hand.get(i).getmResourceIdFull());
-        }
-
-        hintHand = new ArrayList<>(hand);
-
-        // Define the OnClickListener for the five ImageViews representing the current hand
-        View.OnClickListener handClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.game_card_one:
-                        toggleHold(0);
-                        break;
-                    case R.id.game_card_two:
-                        toggleHold(1);
-                        break;
-                    case R.id.game_card_three:
-                        toggleHold(2);
-                        break;
-                    case R.id.game_card_four:
-                        toggleHold(3);
-                        break;
-                    case R.id.game_card_five:
-                        toggleHold(4);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        };
-
-        // Set the OnClickListeners for the five hand ImageViews
+        // Set the OnClickListener for the five ImageViews representing the current hand
         for (ImageView imageView : new ImageView[]{gameCardImageView1, gameCardImageView2,
                 gameCardImageView3, gameCardImageView4, gameCardImageView5}) {
-            imageView.setOnClickListener(handClickListener);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    switch (v.getId()) {
+                        case R.id.game_card_one:
+                            toggleHold(0);
+                            break;
+                        case R.id.game_card_two:
+                            toggleHold(1);
+                            break;
+                        case R.id.game_card_three:
+                            toggleHold(2);
+                            break;
+                        case R.id.game_card_four:
+                            toggleHold(3);
+                            break;
+                        case R.id.game_card_five:
+                            toggleHold(4);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
         }
 
+        // Set the click listener for the Draw button
         drawButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isHintShown){
+                if (!isHintShown) {
                     hintButton.performClick();
                 }
-
 
                 gameHintHandText.setVisibility(View.VISIBLE);
 
@@ -235,6 +217,7 @@ public class GameActivity extends AppCompatActivity {
             }
         });
 
+        // Set the click listener for the Deal button
         dealButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -264,6 +247,7 @@ public class GameActivity extends AppCompatActivity {
             }
         });
 
+        // Set the click listener for the Hint button
         hintButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -285,6 +269,50 @@ public class GameActivity extends AppCompatActivity {
             }
         });
 
+        // Set response for RadioButton's via RadioGroup listener
+        gameChoiceRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                switch (checkedId) {
+                    case R.id.game_radio_button_jacks:
+                        gameSelected = MapLookup.GAME_SELECTION_JACKS;
+                        break;
+                    case R.id.game_radio_button_deuces:
+                        gameSelected = MapLookup.GAME_SELECTION_DEUCES;
+                }
+                if (isHintShown) {
+                    lookUpRecommendedCardsToHold(hintHand);
+                }
+            }
+        });
+
+        // Set default selection of game to "Jacks or Better" via RadioButton selection
+        gameChoiceRadioGroup.check(R.id.game_radio_button_jacks);
+
+        // Set up game so that deal is not selectable after hand is drawn
+        toggleViewClickability(dealButton);
+
+        // Select cards from deck and form initial hand
+        for (int i = 0; i < HAND_SIZE; i++) {
+            hand.add(removeRandomCardFromDeckCopy());
+            gameCardImageViews[i].setImageResource(hand.get(i).getmResourceIdFull());
+        }
+
+        // Create copy of initial hand and set this aside for the hint row
+        hintHand = new ArrayList<>(hand);
+
+        // TODO properly enable prompt to set bet prior to first deal
+        bet = 100;
+        wallet = 500;
+        if (    betText != null &&
+                walletText != null &&
+                betAmountText != null &&
+                walletAmountText != null){
+            betText.setText(R.string.bet);
+            walletText.setText(R.string.wallet);
+            betAmountText.setText(String.valueOf(bet));
+            walletAmountText.setText(String.valueOf(wallet));
+        }
     }
 
 
@@ -328,7 +356,7 @@ public class GameActivity extends AppCompatActivity {
         bypassMapLookUpAndHoldAll = false;
 
         if (Hand.isRoyalFlush(handString)) {
-            gameHandText.setText("Royal Flush");
+            gameHandText.setText(R.string.royal_flush);
             bypassMapLookUpAndHoldAll = true;
         } else if (Hand.isStraightFlush(handString)) {
             gameHandText.setText(R.string.straight_flush);
@@ -386,6 +414,4 @@ public class GameActivity extends AppCompatActivity {
             hintCardImageView.setVisibility(View.VISIBLE);
         }
     }
-
-
 }

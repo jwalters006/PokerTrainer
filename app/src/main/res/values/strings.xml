@@ -8,6 +8,7 @@
     <string name="select_cards">Select cards from below</string>
     <string name="card_already_selected">Card already in hand</string>
     <string name="placeholder">Placeholder text</string>
+    <string name="royal_flush">Royal Flush</string>
     <string name="straight_flush">Straight Flush</string>
     <string name="four_kind">Four of a kind</string>
     <string name="three_kind">Three of a kind</string>
@@ -26,6 +27,9 @@
     <string name="hide_hint">Hide hint</string>
     <string name="hand_full">Hand is full. Click a card in the hand to discard it, or press the
         clear button to clear the hand</string>
+
+    <string name="bet">Bet: </string>
+    <string name="wallet">Wallet: </string>
     <string name="card_selected_singular">
         <xliff:g example="1" id="count">%d</xliff:g>
         card is selected</string>
