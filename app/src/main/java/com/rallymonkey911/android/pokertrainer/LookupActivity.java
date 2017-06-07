@@ -18,10 +18,8 @@ import java.util.Random;
 
 public class LookupActivity extends AppCompatActivity {
 
-    Random rand;
     Deck deck;
     ArrayList<Card> deckListMaster;
-    ArrayList<Card> deckListCopy;
 
     // Declare all ImageView objects in the layout
     public ImageView cardImageView1, cardImageView2, cardImageView3, cardImageView4, cardImageView5,
@@ -81,7 +79,8 @@ public class LookupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lookup);
 
-        setUpMasterDeck();
+        deck = new Deck(this);
+        deckListMaster = setUpMasterDeck(deck);
 
         // Initialize empty list for the five card hand
         hand = new ArrayList<>();
@@ -498,14 +497,15 @@ public class LookupActivity extends AppCompatActivity {
         }
     }
 
-    public void setUpMasterDeck() {
-        deck = new Deck(this);
-        deckListMaster = new ArrayList<>();
+    public ArrayList<Card> setUpMasterDeck(Deck deck) {
+        Deck mDeck = deck;
+        ArrayList<Card> mDeckListMaster = new ArrayList<>();
         for (int suit = 0; suit < Deck.NUM_SUITS; suit++) {
             for (int rank = 0; rank < Deck.NUM_RANKS; rank++) {
-                deckListMaster.add(deck.getCard(suit+1, rank+1));
+                mDeckListMaster.add(mDeck.getCard(suit+1, rank+1));
             }
         }
+        return mDeckListMaster;
     }
 
 }
