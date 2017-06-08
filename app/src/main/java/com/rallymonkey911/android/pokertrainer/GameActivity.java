@@ -1,5 +1,6 @@
 package com.rallymonkey911.android.pokertrainer;
 
+import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,14 +10,12 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class GameActivity extends AppCompatActivity {
+
+    Context context;
 
     // Declare all ImageView objects in the layout
     private ImageView gameCardImageView1, gameCardImageView2, gameCardImageView3, gameCardImageView4,
@@ -59,7 +58,6 @@ public class GameActivity extends AppCompatActivity {
     // Declare variable to hold reference to selected game
     private String gameSelected;
 
-    private boolean bypassMapLookUpAndHoldAll;
     private boolean isHintShown;
 
     // TODO implement code to save state on orientation change
@@ -74,6 +72,7 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        context = this;
         rand = new Random();
         setUpMasterDeck();
         deckListCopy = new ArrayList<>();
@@ -129,7 +128,6 @@ public class GameActivity extends AppCompatActivity {
         radioButtonJacks = (RadioButton) findViewById(R.id.game_radio_button_jacks);
         radioButtonDeuces = (RadioButton) findViewById(R.id.game_radio_button_deuces);
 
-
         // Create arrays to hold ImageViews
         gameCardImageViews = new ImageView[HAND_SIZE];
         gameCardImageViews[0] = gameCardImageView1;
@@ -157,7 +155,6 @@ public class GameActivity extends AppCompatActivity {
         gameHintCardHoldTextViews[2] = gameHintCardHoldText3;
         gameHintCardHoldTextViews[3] = gameHintCardHoldText4;
         gameHintCardHoldTextViews[4] = gameHintCardHoldText5;
-
 
         // Set the OnClickListener for the five ImageViews representing the current hand
         for (ImageView imageView : new ImageView[]{gameCardImageView1, gameCardImageView2,
@@ -208,13 +205,13 @@ public class GameActivity extends AppCompatActivity {
                     }
                     gameCardImageViews[i].setClickable(false);
                 }
-                detectWinningHand();
+
+                gameHandText.setText(Hand.getWinningHandString(context, gameSelected, hand));
                 toggleViewClickability(drawButton);
                 toggleViewClickability(dealButton);
                 toggleViewClickability(hintButton);
                 toggleViewClickability(radioButtonJacks);
                 toggleViewClickability(radioButtonDeuces);
-
             }
         });
 
@@ -222,7 +219,6 @@ public class GameActivity extends AppCompatActivity {
         dealButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 toggleViewClickability(radioButtonJacks);
                 toggleViewClickability(radioButtonDeuces);
                 hideHintCardImageViews();
@@ -230,7 +226,6 @@ public class GameActivity extends AppCompatActivity {
                 hideGameHintHandText();
                 hintButton.setText(getString(R.string.show_hint));
                 isHintShown = false;
-
                 gameHandText.setText(getString(R.string.default_game_hand_text));
                 hand.clear();
                 drawButton.setClickable(true);
@@ -314,7 +309,6 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-
     public void setUpMasterDeck() {
         deck = new Deck(this);
         deckListMaster = new ArrayList<>();
@@ -350,44 +344,11 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    public void detectWinningHand() {
-        List<String> handString = Hand.handAsStringList(hand);
-        bypassMapLookUpAndHoldAll = false;
-
-        if (Hand.isRoyalFlush(handString)) {
-            gameHandText.setText(R.string.royal_flush);
-            bypassMapLookUpAndHoldAll = true;
-        } else if (Hand.isStraightFlush(handString)) {
-            gameHandText.setText(R.string.straight_flush);
-            bypassMapLookUpAndHoldAll = true;
-        } else if (Hand.kind(4, Hand.cardRanks(handString)) != null) {
-            gameHandText.setText(R.string.four_kind);
-            bypassMapLookUpAndHoldAll = true;
-        } else if (Hand.isFullHouse(handString)) {
-            gameHandText.setText(R.string.full_house);
-            bypassMapLookUpAndHoldAll = true;
-        } else if (Hand.isFlush(handString)) {
-            gameHandText.setText(R.string.flush);
-        } else if (Hand.isStraight(Hand.cardRanks(handString))) {
-            gameHandText.setText(R.string.straight);
-        } else if (Hand.kind(3, Hand.cardRanks(handString)) != null) {
-            gameHandText.setText(R.string.three_kind);
-        } else if (Hand.twoPair(Hand.cardRanks(handString)) != null) {
-            gameHandText.setText(R.string.two_pair);
-        } else if (Hand.isJacksOrBetterPair(handString) && gameSelected ==
-                getString(R.string.jacks_or_better)) {
-            gameHandText.setText(R.string.jacks_or_better);
-        } else {
-            gameHandText.setText(R.string.no_win);
-        }
-    }
-
     public void lookUpRecommendedCardsToHold(ArrayList<Card> handToLookup) {
         // Use a String representation of the current five card hand to look up the correct
         // serialized HashMap object.  The String representation of the hand should match as one of
         // the keys to this HashMap, and will pair with corresponding value, which is a String
         // representing the optimal choices of cards to hold.
-
         new PokerAsyncTask(this, gameHintHandText, handToLookup, gameHintCardHoldTextViews,
                 gameSelected).execute(Hand.sortedTomHandString(hand));
     }

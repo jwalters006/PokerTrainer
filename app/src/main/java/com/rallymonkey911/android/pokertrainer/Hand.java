@@ -1,7 +1,6 @@
 package com.rallymonkey911.android.pokertrainer;
 
 import android.content.Context;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -81,11 +80,8 @@ final class Hand {
         Integer[] pair = new Integer[2];
         pair[0] = kind(2, ranks);
         pair[1] = kind(2, sortedRanks);
-        if (pair[0] != null) {
-            if (!pair[1].equals(pair[0])) {
-                return pair;
-            }
-            return null;
+        if (pair[0] != null && !pair[0].equals(pair[1])) {
+            return pair;
         }
         return null;
     }
@@ -111,16 +107,118 @@ final class Hand {
         return handTomStringSorted.toString();
     }
 
+    private static boolean hasAllCardsTenOrHigher(List<String> hand) {
+        List<Integer> handRanks = cardRanks(hand);
+        for (int card : handRanks) {
+            if (card < Card.TEN && card != Card.ACE) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean isOneAwayFromStraight(List<String> hand) {
+        List<Integer> handRanks = cardRanks(hand);
+        Collection<Integer> rankSet = new HashSet<>(handRanks);
+        if (rankSet.size() != 4) {
+            return false;
+        }
+        if (handRanks.get(0) - handRanks.get(3) <= 4) {
+            return true;
+        }
+        if (handRanks.contains(Card.ACE)) {
+            Collections.replaceAll(handRanks, Card.ACE, Card.HIGH_ACE);
+            Collections.sort(handRanks, Collections.<Integer>reverseOrder());
+            if (handRanks.get(0) - handRanks.get(3) <= 4) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isTwoAwayFromStraight(List<String> hand) {
+        List<Integer> handRanks = cardRanks(hand);
+        Collection<Integer> rankSet = new HashSet<>(handRanks);
+        if (rankSet.size() != 3) {
+            return false;
+        }
+        if (handRanks.get(0) - handRanks.get(2) <= 4) {
+            return true;
+        }
+        if (handRanks.contains(Card.ACE)) {
+            Collections.replaceAll(handRanks, Card.ACE, Card.HIGH_ACE);
+            Collections.sort(handRanks, Collections.<Integer>reverseOrder());
+            if (handRanks.get(0) - handRanks.get(2) <= 4) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isThreeAwayFromStraight(List<String> hand) {
+        List<Integer> handRanks = cardRanks(hand);
+        Collection<Integer> rankSet = new HashSet<>(handRanks);
+        if (rankSet.size() != 2) {
+            return false;
+        }
+        if (handRanks.get(0) - handRanks.get(1) <= 4) {
+            return true;
+        }
+        if (handRanks.contains(Card.ACE)) {
+            Collections.replaceAll(handRanks, Card.ACE, Card.HIGH_ACE);
+            Collections.sort(handRanks, Collections.<Integer>reverseOrder());
+            if (handRanks.get(0) - handRanks.get(1) <= 4) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isOneAwayFromStraightFlush(List<String> hand) {
+        return isOneAwayFromStraight(hand) &&
+                isFlush(hand);
+    }
+
+    private static boolean isTwoAwayFromStraightFlush(List<String> hand) {
+        return isTwoAwayFromStraight(hand) &&
+                isFlush(hand);
+    }
+
+    private static boolean isThreeAwayFromStraightFlush(List<String> hand) {
+        return isThreeAwayFromStraight(hand) &&
+                isFlush(hand);
+    }
+
+    private static boolean isOneAwayFromRoyalFlush(List<String> hand) {
+        return isOneAwayFromStraightFlush(hand) &&
+                hasAllCardsTenOrHigher(hand);
+    }
+
+    private static boolean isTwoAwayFromRoyalFlush(List<String> hand) {
+        return isTwoAwayFromStraightFlush(hand) &&
+                hasAllCardsTenOrHigher(hand);
+    }
+
+    private static boolean isThreeAwayFromRoyalFlush(List<String> hand) {
+        return isThreeAwayFromStraightFlush(hand) &&
+                hasAllCardsTenOrHigher(hand);
+    }
+
+    private static boolean isOneAwayFromThreeOfAKind(List<String> hand) {
+        List<Integer> handRanks = cardRanks(hand);
+        return kind(2, handRanks) != null && kind(2, handRanks) != Card.DEUCE;
+    }
+
     static String getWinningHandString(Context context, String gameSelected, List<Card> hand) {
-        if (gameSelected == context.getString(R.string.jacks_or_better)) {
+        if (gameSelected.equals(context.getString(R.string.jacks_or_better))) {
             return getWinningJacksOrBetterString(context, hand);
-        } else if (gameSelected == context.getString(R.string.deuces_wild)) {
+        } else if (gameSelected.equals(context.getString(R.string.deuces_wild))) {
             return getWinningDeucesWildString(context, hand);
         }
         return "";
     }
 
-    static String getWinningJacksOrBetterString(Context context, List<Card> hand) {
+    private static String getWinningJacksOrBetterString(Context context, List<Card> hand) {
         List<String> handString = handAsStringList(hand);
         if (isRoyalFlush(handString)) {
             return context.getString(R.string.royal_flush);
@@ -145,31 +243,95 @@ final class Hand {
         }
     }
 
-    static String getWinningDeucesWildString(Context context, List<Card> hand) {
-        List<String> handString = handAsStringList(hand);
-        if (isRoyalFlush(handString)) {
-            return context.getString(R.string.natural_royal_flush);
-        } else if (kind(4, cardRanks(handString)).equals(2)) {
-            return "four two's!";
-        } else if (isStraightFlush(handString)) {
-            return context.getString(R.string.straight_flush);
-        } else if (kind(4, cardRanks(handString)) != null) {
-            return context.getString(R.string.four_kind);
-        } else if (isFullHouse(handString)) {
-            return context.getString(R.string.full_house);
-        } else if (isFlush(handString)) {
-            return context.getString(R.string.flush);
-        } else if (isStraight(cardRanks(handString))) {
-            return context.getString(R.string.straight);
-        } else if (kind(3, cardRanks(handString)) != null) {
-            return context.getString(R.string.three_kind);
-        } else if (twoPair(cardRanks(handString)) != null) {
-            return context.getString(R.string.two_pair);
-        } else if (isJacksOrBetterPair(handString)) {
-            return context.getString(R.string.jacks_or_better);
+    private static String getWinningDeucesWildString(Context context, List<Card> hand) {
+        List<String> handStringInitial = handAsStringList(hand);
+
+        List<String> handString = new ArrayList<>();
+
+
+        int numberOfDeuces = Collections.frequency(cardRanks(handStringInitial), Card.DEUCE);
+        if (numberOfDeuces > 0) {
+            // Trim the hand of any deuces here
+            for (String cardAsString : handStringInitial) {
+                if (!cardAsString.substring(0, 1).equals("2")) {
+                    handString.add(cardAsString);
+                }
+            }
         } else {
-            return context.getString(R.string.no_win);
+            handString.addAll(handStringInitial);
+        }
+
+        switch (numberOfDeuces) {
+            case 0:
+                if (isRoyalFlush(handString)) {
+                    return context.getString(R.string.natural_royal_flush);
+                } else if (isStraightFlush(handString)) {
+                    return context.getString(R.string.straight_flush);
+                } else if (kind(4, cardRanks(handString)) != null) {
+                    return context.getString(R.string.four_kind);
+                } else if (isFullHouse(handString)) {
+                    return context.getString(R.string.full_house);
+                } else if (isFlush(handString)) {
+                    return context.getString(R.string.flush);
+                } else if (isStraight(cardRanks(handString))) {
+                    return context.getString(R.string.straight);
+                } else if (kind(3, cardRanks(handString)) != null) {
+                    return context.getString(R.string.three_kind);
+                } else {
+                    return context.getString(R.string.no_win);
+                }
+
+            case 1:
+                if (isOneAwayFromRoyalFlush(handString)) {
+                    return context.getString(R.string.royal_flush);
+                } else if (kind(4, cardRanks(handString)) != null) {
+                    return context.getString(R.string.five_kind);
+                } else if (isOneAwayFromStraightFlush(handString)) {
+                    return context.getString(R.string.straight_flush);
+                } else if (kind(3, cardRanks(handString)) != null) {
+                    return context.getString(R.string.four_kind);
+                } else if (twoPair(cardRanks(handString)) != null) {
+                    return context.getString(R.string.full_house);
+                } else if (isFlush(handString)) {
+                    return context.getString(R.string.flush);
+                } else if (isOneAwayFromStraight(handString)) {
+                    return context.getString(R.string.straight);
+                } else if (isOneAwayFromThreeOfAKind(handString)) {
+                    return context.getString(R.string.three_kind);
+                } else {
+                    return context.getString(R.string.no_win);
+                }
+
+            case 2:
+                if (isTwoAwayFromRoyalFlush(handString)) {
+                    return context.getString(R.string.royal_flush);
+                } else if (kind(3, cardRanks(handString)) != null) {
+                    return context.getString(R.string.five_kind);
+                } else if (isTwoAwayFromStraightFlush(handString)) {
+                    return context.getString(R.string.straight_flush);
+                } else if (isOneAwayFromThreeOfAKind(handString)) {
+                    return context.getString(R.string.four_kind);
+                } else if (isFlush(handString)) {
+                    return context.getString(R.string.flush);
+                } else if (isTwoAwayFromStraight(handString)) {
+                    return context.getString(R.string.straight);
+                } else {
+                    return context.getString(R.string.three_kind);
+                }
+
+            case 3:
+                if (isThreeAwayFromRoyalFlush(handString)) {
+                    return context.getString(R.string.royal_flush);
+                } else if (isOneAwayFromThreeOfAKind(handString)) {
+                    return context.getString(R.string.five_kind);
+                } else if (isThreeAwayFromStraightFlush(handString)) {
+                    return context.getString(R.string.straight_flush);
+                } else {
+                    return context.getString(R.string.four_kind);
+                }
+
+            default:
+                return context.getString(R.string.four_deuces);
         }
     }
-
 }

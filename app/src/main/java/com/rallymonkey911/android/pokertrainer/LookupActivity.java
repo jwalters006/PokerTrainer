@@ -1,5 +1,6 @@
 package com.rallymonkey911.android.pokertrainer;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.content.ContextCompat;
@@ -11,12 +12,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class LookupActivity extends AppCompatActivity {
 
+    Context context;
     Deck deck;
     ArrayList<Card> deckListMaster;
 
@@ -54,10 +54,6 @@ public class LookupActivity extends AppCompatActivity {
     // indicators placed above each ImageView representing a card in the hand.
     TextView[] holdTextViewLabels = new TextView[5];
 
-    // Declare boolean flag used in setting all hold TextViews to Visible automatically if the hand
-    // contains four-of-a-kind or a full-house.
-    boolean bypassMapLookUpAndHoldAll;
-
     // Declare RadioGroup object that will be used to hold RadioButton objects
     private RadioGroup gameChoiceRadioGroup;
 
@@ -77,6 +73,8 @@ public class LookupActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lookup);
+
+        context = this;
 
         deck = new Deck(this);
         deckListMaster = createDeckListOfCards(deck);
@@ -186,7 +184,10 @@ public class LookupActivity extends AppCompatActivity {
                         gameSelected = getString(R.string.deuces_wild);
                 }
                 if (hand.size() == 5) {
-                    detectWinningHand();
+                    //detectWinningHand();
+                    handText.setText(Hand.getWinningHandString(context, gameSelected, hand));
+                    lookUpRecommendedCardsToHold();
+
                 }
             }
         });
@@ -393,7 +394,9 @@ public class LookupActivity extends AppCompatActivity {
                 handText.setText(getString(R.string.card_selected_singular, count));
                 break;
             case PokerAsyncTask.NUMBER_OF_CARDS_IN_FULL_HAND:
-                detectWinningHand();
+                //detectWinningHand();
+                handText.setText(Hand.getWinningHandString(context, gameSelected, hand));
+                lookUpRecommendedCardsToHold();
                 break;
             default:
                 handText.setText(getString(R.string.cards_selected_plural, count));
@@ -443,50 +446,13 @@ public class LookupActivity extends AppCompatActivity {
         }
     }
 
-    public void detectWinningHand() {
-        List<String> handString = Hand.handAsStringList(hand);
-        bypassMapLookUpAndHoldAll = false;
-
-        if (Hand.isRoyalFlush(handString)) {
-            handText.setText("Royal Flush");
-            bypassMapLookUpAndHoldAll = true;
-        } else if (Hand.isStraightFlush(handString)) {
-            handText.setText(R.string.straight_flush);
-            bypassMapLookUpAndHoldAll = true;
-        } else if (Hand.kind(4, Hand.cardRanks(handString)) != null) {
-            handText.setText(R.string.four_kind);
-            bypassMapLookUpAndHoldAll = true;
-        } else if (Hand.isFullHouse(handString)) {
-            handText.setText(R.string.full_house);
-            bypassMapLookUpAndHoldAll = true;
-        } else if (Hand.isFlush(handString)) {
-            handText.setText(R.string.flush);
-        } else if (Hand.isStraight(Hand.cardRanks(handString))) {
-            handText.setText(R.string.straight);
-        } else if (Hand.kind(3, Hand.cardRanks(handString)) != null) {
-            handText.setText(R.string.three_kind);
-        } else if (Hand.twoPair(Hand.cardRanks(handString)) != null) {
-            handText.setText(R.string.two_pair);
-        } else {
-            handText.setText(R.string.no_win);
-        }
-
-        lookUpRecommendedCardsToHold();
-    }
-
     public void lookUpRecommendedCardsToHold() {
         // Use a String representation of the current five card hand to look up the correct
         // serialized HashMap object.  The String representation of the hand should match as one of
         // the keys to this HashMap, and will pair with corresponding value, which is a String
         // representing the optimal choices of cards to hold.
-        if (bypassMapLookUpAndHoldAll) {
-            for (TextView holdTextViewLabel : holdTextViewLabels) {
-                holdTextViewLabel.setVisibility((View.VISIBLE));
-            }
-        } else {
-            new PokerAsyncTask(this, directionsText, hand, holdTextViewLabels,
-                    gameSelected).execute(Hand.sortedTomHandString(hand));
-        }
+        new PokerAsyncTask(this, directionsText, hand, holdTextViewLabels,
+                gameSelected).execute(Hand.sortedTomHandString(hand));
     }
 
     public ArrayList<Card> createDeckListOfCards(Deck deck) {
