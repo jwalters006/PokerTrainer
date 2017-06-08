@@ -53,12 +53,12 @@ final class Hand {
     }
 
     static boolean isStraightFlush(List<String> hand) {
-        return Hand.isFlush(hand) && Hand.isStraight(Hand.cardRanks(hand));
+        return isFlush(hand) && isStraight(cardRanks(hand));
     }
 
     static boolean isRoyalFlush(List<String> hand) {
-        return Hand.isFlush(hand) && Hand.isStraight(Hand.cardRanks(hand)) &&
-                Hand.cardRanks(hand).contains(Card.HIGH_ACE);
+        return isFlush(hand) && isStraight(cardRanks(hand)) &&
+                cardRanks(hand).contains(Card.HIGH_ACE);
     }
 
     static Integer kind(int n, List<Integer> ranks) {
@@ -71,8 +71,8 @@ final class Hand {
     }
 
     static boolean isFullHouse(List<String> hand) {
-        return Hand.kind(3, Hand.cardRanks(hand)) != null &&
-                Hand.kind(2, Hand.cardRanks(hand)) != null;
+        return kind(3, cardRanks(hand)) != null &&
+                kind(2, cardRanks(hand)) != null;
     }
 
     static Integer[] twoPair(List<Integer> ranks) {
@@ -91,34 +91,13 @@ final class Hand {
     }
 
     static boolean isJacksOrBetterPair(List<String> hand) {
-        int numberOfJacks = 0;
-        int numberOfQueens = 0;
-        int numberOfKings = 0;
-        int numberOfAces = 0;
-
-        List<Integer> ranks = Hand.cardRanks(hand);
-
-        for (int rank : ranks) {
-            if (rank == Card.JACK) {
-                numberOfJacks++;
-            } else if (rank == Card.QUEEN) {
-                numberOfQueens++;
-            } else if (rank == Card.KING) {
-                numberOfKings++;
-            } else if (rank == Card.ACE || rank == Card.HIGH_ACE) {
-                numberOfAces++;
+        if (kind(2, cardRanks(hand)) != null) {
+            if (kind(2, cardRanks(hand)) >= Card.JACK ||
+                    (kind(2, cardRanks(hand))) == Card.ACE) {
+                return true;
             }
         }
-
-        if (numberOfJacks == 2 ||
-                numberOfQueens == 2 ||
-                numberOfKings == 2 ||
-                numberOfAces == 2) {
-            return true;
-        } else {
-            return false;
-        }
-
+        return false;
     }
 
     static String sortedTomHandString(List<Card> hand) {
@@ -143,23 +122,23 @@ final class Hand {
 
     static String getWinningJacksOrBetterString(Context context, List<Card> hand) {
         List<String> handString = handAsStringList(hand);
-        if (Hand.isRoyalFlush(handString)) {
+        if (isRoyalFlush(handString)) {
             return context.getString(R.string.royal_flush);
-        } else if (Hand.isStraightFlush(handString)) {
+        } else if (isStraightFlush(handString)) {
             return context.getString(R.string.straight_flush);
-        } else if (Hand.kind(4, Hand.cardRanks(handString)) != null) {
+        } else if (kind(4, cardRanks(handString)) != null) {
             return context.getString(R.string.four_kind);
-        } else if (Hand.isFullHouse(handString)) {
+        } else if (isFullHouse(handString)) {
             return context.getString(R.string.full_house);
-        } else if (Hand.isFlush(handString)) {
+        } else if (isFlush(handString)) {
             return context.getString(R.string.flush);
-        } else if (Hand.isStraight(Hand.cardRanks(handString))) {
+        } else if (isStraight(cardRanks(handString))) {
             return context.getString(R.string.straight);
-        } else if (Hand.kind(3, Hand.cardRanks(handString)) != null) {
+        } else if (kind(3, cardRanks(handString)) != null) {
             return context.getString(R.string.three_kind);
-        } else if (Hand.twoPair(Hand.cardRanks(handString)) != null) {
+        } else if (twoPair(cardRanks(handString)) != null) {
             return context.getString(R.string.two_pair);
-        } else if (Hand.isJacksOrBetterPair(handString)) {
+        } else if (isJacksOrBetterPair(handString)) {
             return context.getString(R.string.jacks_or_better);
         } else {
             return context.getString(R.string.no_win);
@@ -168,25 +147,25 @@ final class Hand {
 
     static String getWinningDeucesWildString(Context context, List<Card> hand) {
         List<String> handString = handAsStringList(hand);
-        if (Hand.isRoyalFlush(handString)) {
+        if (isRoyalFlush(handString)) {
             return context.getString(R.string.natural_royal_flush);
-        } else if (Hand.kind(4, Hand.cardRanks(handString)).equals(2)) {
+        } else if (kind(4, cardRanks(handString)).equals(2)) {
             return "four two's!";
-        } else if (Hand.isStraightFlush(handString)) {
+        } else if (isStraightFlush(handString)) {
             return context.getString(R.string.straight_flush);
-        } else if (Hand.kind(4, Hand.cardRanks(handString)) != null) {
+        } else if (kind(4, cardRanks(handString)) != null) {
             return context.getString(R.string.four_kind);
-        } else if (Hand.isFullHouse(handString)) {
+        } else if (isFullHouse(handString)) {
             return context.getString(R.string.full_house);
-        } else if (Hand.isFlush(handString)) {
+        } else if (isFlush(handString)) {
             return context.getString(R.string.flush);
-        } else if (Hand.isStraight(Hand.cardRanks(handString))) {
+        } else if (isStraight(cardRanks(handString))) {
             return context.getString(R.string.straight);
-        } else if (Hand.kind(3, Hand.cardRanks(handString)) != null) {
+        } else if (kind(3, cardRanks(handString)) != null) {
             return context.getString(R.string.three_kind);
-        } else if (Hand.twoPair(Hand.cardRanks(handString)) != null) {
+        } else if (twoPair(cardRanks(handString)) != null) {
             return context.getString(R.string.two_pair);
-        } else if (Hand.isJacksOrBetterPair(handString)) {
+        } else if (isJacksOrBetterPair(handString)) {
             return context.getString(R.string.jacks_or_better);
         } else {
             return context.getString(R.string.no_win);
