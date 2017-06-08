@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class LookupActivity extends AppCompatActivity {
 
@@ -39,7 +38,7 @@ public class LookupActivity extends AppCompatActivity {
             diamondsImageView, heartsImageView, clubsImageView, spadesImageView;
 
     ImageView[] diamondsImageViews, heartsImageViews, clubsImageViews, spadesImageViews;
-    ImageView[][] allImageViews = new ImageView[4][13];
+    ImageView[][] allImageViews = new ImageView[Deck.NUM_SUITS][Deck.NUM_RANKS];
 
     // Declare all TextView objects in the layout
     public TextView handText, directionsText, cardOneHoldText, cardTwoHoldText, cardThreeHoldText,
@@ -80,7 +79,7 @@ public class LookupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lookup);
 
         deck = new Deck(this);
-        deckListMaster = setUpMasterDeck(deck);
+        deckListMaster = createDeckListOfCards(deck);
 
         // Initialize empty list for the five card hand
         hand = new ArrayList<>();
@@ -88,7 +87,6 @@ public class LookupActivity extends AppCompatActivity {
         // Find reference to TextViews in the layout
         handText = (TextView) findViewById(R.id.lookup_hand_text);
         directionsText = (TextView) findViewById(R.id.lookup_directions_text);
-
         cardOneHoldText = (TextView) findViewById(R.id.lookup_card_one_hold);
         cardTwoHoldText = (TextView) findViewById(R.id.lookup_card_two_hold);
         cardThreeHoldText = (TextView) findViewById(R.id.lookup_card_three_hold);
@@ -99,9 +97,6 @@ public class LookupActivity extends AppCompatActivity {
         holdTextViewLabels[2] = cardThreeHoldText;
         holdTextViewLabels[3] = cardFourHoldText;
         holdTextViewLabels[4] = cardFiveHoldText;
-
-        // Disable hand status description for now (may enable it again in future commit
-        handText.setVisibility(View.GONE);
 
         // Find reference to ImageView's in the layout
         cardImageView1 = (ImageView) findViewById(R.id.lookup_card_one);
@@ -177,7 +172,7 @@ public class LookupActivity extends AppCompatActivity {
         radioButtonDeuces = (RadioButton) findViewById(R.id.lookup_radio_button_deuces);
 
         // Set the default game selection
-        gameSelected = MapLookup.GAME_SELECTION_JACKS;
+        gameSelected = getString(R.string.jacks_or_better);
 
         // Set response for RadioButton's via RadioGroup listener
         gameChoiceRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -185,10 +180,10 @@ public class LookupActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 switch (checkedId) {
                     case R.id.lookup_radio_button_jacks:
-                        gameSelected = MapLookup.GAME_SELECTION_JACKS;
+                        gameSelected = getString(R.string.jacks_or_better);
                         break;
                     case R.id.lookup_radio_button_deuces:
-                        gameSelected = MapLookup.GAME_SELECTION_DEUCES;
+                        gameSelected = getString(R.string.deuces_wild);
                 }
                 if (hand.size() == 5) {
                     detectWinningHand();
@@ -294,13 +289,10 @@ public class LookupActivity extends AppCompatActivity {
             ArrayList<Card> handCopy = (ArrayList<Card>) savedInstanceState.getSerializable(
                     STATE_PLAYER_HAND);
             gameSelected = savedInstanceState.getString(STATE_GAME_SELECTED);
-            
-            switch (gameSelected) {
-                case MapLookup.GAME_SELECTION_JACKS:
-                    gameChoiceRadioGroup.check(R.id.lookup_radio_button_jacks);
-                    break;
-                case MapLookup.GAME_SELECTION_DEUCES:
-                    gameChoiceRadioGroup.check(R.id.lookup_radio_button_deuces);
+            if (gameSelected == getString(R.string.jacks_or_better)) {
+                gameChoiceRadioGroup.check(R.id.lookup_radio_button_jacks);
+            } else if (gameSelected == getString(R.string.deuces_wild)) {
+                gameChoiceRadioGroup.check(R.id.lookup_radio_button_deuces);
             }
 
             for (Card card : handCopy) {
@@ -497,12 +489,12 @@ public class LookupActivity extends AppCompatActivity {
         }
     }
 
-    public ArrayList<Card> setUpMasterDeck(Deck deck) {
+    public ArrayList<Card> createDeckListOfCards(Deck deck) {
         Deck mDeck = deck;
         ArrayList<Card> mDeckListMaster = new ArrayList<>();
         for (int suit = 0; suit < Deck.NUM_SUITS; suit++) {
             for (int rank = 0; rank < Deck.NUM_RANKS; rank++) {
-                mDeckListMaster.add(mDeck.getCard(suit+1, rank+1));
+                mDeckListMaster.add(mDeck.getCard(suit + 1, rank + 1));
             }
         }
         return mDeckListMaster;

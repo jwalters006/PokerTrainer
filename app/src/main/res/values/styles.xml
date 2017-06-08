@@ -8,16 +8,40 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="handCardLandscape">
+    <style name="landscape_hand_card">
         <item name="android:layout_height">@dimen/card_height_medium</item>
         <item name="android:layout_marginRight">@dimen/horizontal_spacing</item>
     </style>
 
-    <style name="smallCardRow">
+    <style name="small_card_row">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">@dimen/horizontal_spacing</item>
-
     </style>
+
+    <style name="portrait_lookup_hold">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">@dimen/horizontal_spacing</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:text">@string/hold</item>
+        <item name="android:visibility">invisible</item>
+    </style>
+
+    <style name="portrait_lookup_card">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/card_height</item>
+        <item name="android:layout_marginRight">@dimen/horizontal_spacing</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:contentDescription">@string/card_image</item>
+    </style>
+
+    <style name="small_card">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/card_height_small</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:contentDescription">@string/card_image</item>
+    </style>
+
 
 </resources>

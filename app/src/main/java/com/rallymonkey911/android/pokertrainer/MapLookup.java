@@ -1,8 +1,6 @@
 package com.rallymonkey911.android.pokertrainer;
 
 import android.content.Context;
-import android.util.Log;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,19 +12,12 @@ import java.util.Map;
  * Created by jeff on 4/25/2017.
  */
 
-public class MapLookup {
-
-    public static final String GAME_SELECTION_JACKS = "Jacks or Better";
-    public static final String GAME_SELECTION_DEUCES = "Deuces Wild";
-
-
+final class MapLookup {
 
     private MapLookup() {}
 
-    public static String lookUpInMap(Context context, String sortedTomHandString,
+    static String lookUpInMap(Context context, String sortedTomHandString,
                                      String gameSelected) {
-        Log.v("lookUpInMap ", "sortedTomHandString: "+sortedTomHandString);
-        Log.v("lookUpInMap ", "gameSelected: " + gameSelected);
         String firstCard = sortedTomHandString.substring(0,PokerAsyncTask.CODE_LENGTH_ONE_CARD);
         String secondCard = sortedTomHandString.substring(PokerAsyncTask.CODE_LENGTH_ONE_CARD,
                 PokerAsyncTask.CODE_LENGTH_ONE_CARD*2);
@@ -34,7 +25,7 @@ public class MapLookup {
         InputStream resource;
         String resourcePrefix;
         String resourceSuffix;
-        if (gameSelected.equals(GAME_SELECTION_JACKS)) {
+        if (gameSelected.equals(context.getString(R.string.jacks_or_better))) {
             resourcePrefix = "test_hash_map_";
         } else {
             resourcePrefix = "dw_map_";
@@ -397,11 +388,7 @@ public class MapLookup {
             in.close();
             bufferedFileIn.close();
             resource.close();
-            Log.v("MapLookUp ", "sortedTomHandString " + sortedTomHandString);
             String result = (String) map.get(sortedTomHandString);
-            if (result == null){
-                Log.v("MapLookUp ", "result is null!!!");
-            }
             map = null;
             return result;
         } catch (IOException i) {

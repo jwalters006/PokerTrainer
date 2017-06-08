@@ -514,7 +514,7 @@
 
             <ImageView
                 android:id="@+id/lookup_card_one"
-                style="@style/handCardLandscape"
+                style="@style/landscape_hand_card"
                 android:layout_width="0dp"
                 android:layout_marginLeft="@dimen/horizontal_spacing"
                 android:layout_weight="1"
@@ -522,28 +522,28 @@
 
             <ImageView
                 android:id="@+id/lookup_card_two"
-                style="@style/handCardLandscape"
+                style="@style/landscape_hand_card"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/card_image" />
 
             <ImageView
                 android:id="@+id/lookup_card_three"
-                style="@style/handCardLandscape"
+                style="@style/landscape_hand_card"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/card_image" />
 
             <ImageView
                 android:id="@+id/lookup_card_four"
-                style="@style/handCardLandscape"
+                style="@style/landscape_hand_card"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/card_image" />
 
             <ImageView
                 android:id="@+id/lookup_card_five"
-                style="@style/handCardLandscape"
+                style="@style/landscape_hand_card"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/card_image" />

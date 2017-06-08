@@ -62,6 +62,7 @@ public class GameActivity extends AppCompatActivity {
     private boolean bypassMapLookUpAndHoldAll;
     private boolean isHintShown;
 
+    // TODO implement code to save state on orientation change
     private static final String STATE_PLAYER_HAND = "playerHand";
     private static final String STATE_GAME_SELECTED = "gameSelected";
     private static final int HAND_SIZE = 5;
@@ -273,12 +274,10 @@ public class GameActivity extends AppCompatActivity {
         gameChoiceRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                switch (checkedId) {
-                    case R.id.game_radio_button_jacks:
-                        gameSelected = MapLookup.GAME_SELECTION_JACKS;
-                        break;
-                    case R.id.game_radio_button_deuces:
-                        gameSelected = MapLookup.GAME_SELECTION_DEUCES;
+                if (checkedId == R.id.game_radio_button_jacks) {
+                    gameSelected = getString(R.string.jacks_or_better);
+                } else if (checkedId == R.id.game_radio_button_deuces) {
+                    gameSelected = getString(R.string.deuces_wild);
                 }
                 if (isHintShown) {
                     lookUpRecommendedCardsToHold(hintHand);
@@ -304,10 +303,10 @@ public class GameActivity extends AppCompatActivity {
         // TODO properly enable prompt to set bet prior to first deal
         bet = 100;
         wallet = 500;
-        if (    betText != null &&
+        if (betText != null &&
                 walletText != null &&
                 betAmountText != null &&
-                walletAmountText != null){
+                walletAmountText != null) {
             betText.setText(R.string.bet);
             walletText.setText(R.string.wallet);
             betAmountText.setText(String.valueOf(bet));
@@ -376,7 +375,7 @@ public class GameActivity extends AppCompatActivity {
         } else if (Hand.twoPair(Hand.cardRanks(handString)) != null) {
             gameHandText.setText(R.string.two_pair);
         } else if (Hand.isJacksOrBetterPair(handString) && gameSelected ==
-                MapLookup.GAME_SELECTION_JACKS) {
+                getString(R.string.jacks_or_better)) {
             gameHandText.setText(R.string.jacks_or_better);
         } else {
             gameHandText.setText(R.string.no_win);
