@@ -160,6 +160,7 @@
             android:id="@+id/bet_amount_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:layout_toRightOf="@id/bet_text" />
 
         <TextView
@@ -167,6 +168,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_marginLeft="8dp"
             android:layout_marginRight="80dp" />
 
         <TextView
@@ -202,6 +204,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/show_hint" />
+
+        <Button
+            android:id="@+id/bet_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bet_button" />
 
     </LinearLayout>
 
@@ -269,7 +277,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="@dimen/horizontal_spacing"
             android:layout_weight="1"
-            android:text="HOLD"
+            android:text="@string/hold"
             android:visibility="invisible" />
 
         <TextView
@@ -278,7 +286,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/horizontal_spacing"
             android:layout_weight="1"
-            android:text="HOLD"
+            android:text="@string/hold"
             android:visibility="invisible" />
 
         <TextView
@@ -287,7 +295,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/horizontal_spacing"
             android:layout_weight="1"
-            android:text="HOLD"
+            android:text="@string/hold"
             android:visibility="invisible" />
 
         <TextView
@@ -296,7 +304,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/horizontal_spacing"
             android:layout_weight="1"
-            android:text="HOLD"
+            android:text="@string/hold"
             android:visibility="invisible" />
 
         <TextView
@@ -316,7 +324,6 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/game_card_hold_parent"
         android:layout_centerHorizontal="true"
-        android:text="@string/default_game_hand_text"
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold" />

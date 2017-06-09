@@ -29,14 +29,24 @@
     <string name="draw">Draw</string>
     <string name="show_hint">Show hint</string>
     <string name="hide_hint">Hide hint</string>
+    <string name="bet_button">Bet</string>
     <string name="hand_full">Hand is full. Click a card in the hand to discard it, or press the
         clear button to clear the hand</string>
     <string name="bet">Bet: </string>
     <string name="wallet">Wallet: </string>
     <string name="deuces_wild">Deuces Wild</string>
+    <string name="dialog_change_bet">Set/Change bet amount</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="place_bet">Place bet</string>
+    <string name="wallet_reset">You have fully depleted your wallet.  Your wallet will be reset to
+        $500</string>
     <string name="card_selected_singular">
         <xliff:g example="1" id="count">%d</xliff:g>
         card is selected</string>
     <string name="cards_selected_plural"><xliff:g example="2" id="count">%d</xliff:g>
          cards are selected</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -2,6 +2,8 @@ package com.rallymonkey911.android.pokertrainer;
 
 import android.content.Context;
 import android.support.annotation.IdRes;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,11 +12,15 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Random;
 
-public class GameActivity extends AppCompatActivity {
-
+public class GameActivity extends AppCompatActivity
+        implements ChangeBetDialogFragment.ChangeBetDialogListener {
+//TODO Fix GameActivity landscape layout
     Context context;
 
     // Declare all ImageView objects in the layout
@@ -36,10 +42,11 @@ public class GameActivity extends AppCompatActivity {
     private Button drawButton;
     private Button dealButton;
     private Button hintButton;
+    private Button betButton;
 
     private Random rand;
 
-    private int bet, wallet;
+    int bet, wallet;
 
     private Deck deck;
 
@@ -120,6 +127,7 @@ public class GameActivity extends AppCompatActivity {
         drawButton = (Button) findViewById(R.id.draw_button);
         dealButton = (Button) findViewById(R.id.deal_button);
         hintButton = (Button) findViewById(R.id.hint_button);
+        betButton = (Button) findViewById(R.id.bet_button);
 
         // Find reference to the radioGroup in the layout
         gameChoiceRadioGroup = (RadioGroup) findViewById(R.id.game_game_choice_radio_group);
@@ -205,11 +213,25 @@ public class GameActivity extends AppCompatActivity {
                     }
                     gameCardImageViews[i].setClickable(false);
                 }
-
-                gameHandText.setText(Hand.getWinningHandString(context, gameSelected, hand));
+                String winningText = Hand.getWinningHandString(context, gameSelected, hand);
+                collectWinningsOrLosses(winningText, gameSelected);
+                if (bet > wallet) {
+                    bet = wallet;
+                    betAmountText.setText(String.format(Locale.US, "%d", bet));
+                }
+                if (wallet <= 0) {
+                    wallet = 500;
+                    bet = 100;
+                    walletAmountText.setText(String.format(Locale.US, "%d", wallet));
+                    betAmountText.setText(String.format(Locale.US, "%d", bet));
+                    Toast.makeText(getApplication(), R.string.wallet_reset,
+                            Toast.LENGTH_SHORT).show();
+                }
+                gameHandText.setText(winningText);
                 toggleViewClickability(drawButton);
                 toggleViewClickability(dealButton);
                 toggleViewClickability(hintButton);
+                toggleViewClickability(betButton);
                 toggleViewClickability(radioButtonJacks);
                 toggleViewClickability(radioButtonDeuces);
             }
@@ -237,9 +259,12 @@ public class GameActivity extends AppCompatActivity {
                     gameCardImageViews[i].setClickable(true);
                 }
                 hintHand = new ArrayList<>(hand);
+                wallet = wallet - bet;
+                walletAmountText.setText(String.format(Locale.US, "%d", wallet));
                 toggleViewClickability(drawButton);
                 toggleViewClickability(dealButton);
                 toggleViewClickability(hintButton);
+                toggleViewClickability(betButton);
             }
         });
 
@@ -249,7 +274,8 @@ public class GameActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!isHintShown) {
                     for (int i = 0; i < HAND_SIZE; i++) {
-                        gameHintCardImageViews[i].setImageResource(hintHand.get(i).getmResourceIdFull());
+                        gameHintCardImageViews[i].setImageResource(
+                                hintHand.get(i).getmResourceIdFull());
                     }
                     showHintCardImageViews();
                     lookUpRecommendedCardsToHold(hintHand);
@@ -286,16 +312,9 @@ public class GameActivity extends AppCompatActivity {
         // Set up game so that deal is not selectable after hand is drawn
         toggleViewClickability(dealButton);
 
-        // Select cards from deck and form initial hand
-        for (int i = 0; i < HAND_SIZE; i++) {
-            hand.add(removeRandomCardFromDeckCopy());
-            gameCardImageViews[i].setImageResource(hand.get(i).getmResourceIdFull());
-        }
-
         // Create copy of initial hand and set this aside for the hint row
         hintHand = new ArrayList<>(hand);
 
-        // TODO properly enable prompt to set bet prior to first deal
         bet = 100;
         wallet = 500;
         if (betText != null &&
@@ -304,9 +323,35 @@ public class GameActivity extends AppCompatActivity {
                 walletAmountText != null) {
             betText.setText(R.string.bet);
             walletText.setText(R.string.wallet);
-            betAmountText.setText(String.valueOf(bet));
-            walletAmountText.setText(String.valueOf(wallet));
+            betAmountText.setText(String.format(Locale.US, "%d", bet));
+            walletAmountText.setText(String.format(Locale.US, "%d", wallet));
         }
+
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+
+        betButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChangeBetDialogFragment fragment = new ChangeBetDialogFragment();
+                fragment.show(fragmentManager, "betFragment");
+            }
+        });
+
+        betButton.performClick();
+        toggleViewClickability(drawButton);
+        toggleViewClickability(dealButton);
+        toggleViewClickability(hintButton);
+
+    }
+
+    @Override
+    public void onDialogPositiveClick(int betToChangeTo) {
+        bet = betToChangeTo;
+        betAmountText.setText(String.valueOf(bet));
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialogFragment) {
     }
 
     public void setUpMasterDeck() {
@@ -372,6 +417,65 @@ public class GameActivity extends AppCompatActivity {
     private void showHintCardImageViews() {
         for (ImageView hintCardImageView : gameHintCardImageViews) {
             hintCardImageView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void collectWinningsOrLosses(String winningText, String gameSelected) {
+        int winningsFactor = 0;
+        if (gameSelected.equals(getString(R.string.deuces_wild))) {
+            if (winningText.equals(getString(R.string.natural_royal_flush))) {
+                winningsFactor = Hand.DW_NATURAL_ROYAL_FLUSH_PAYOFF;
+            } else if (winningText.equals(getString(R.string.four_deuces))) {
+                winningsFactor = Hand.DW_FOUR_DEUCES_PAYOFF;
+            } else if (winningText.equals(getString(R.string.royal_flush))) {
+                winningsFactor = Hand.DW_WILD_ROYAL_FLUSH_PAYOFF;
+            } else if (winningText.equals(getString(R.string.five_kind))) {
+                winningsFactor = Hand.DW_FIVE_OF_A_KIND_PAYOFF;
+            } else if (winningText.equals(getString(R.string.straight_flush))) {
+                winningsFactor = Hand.DW_STRAIGHT_FLUSH_PAYOFF;
+            } else if (winningText.equals(getString(R.string.four_kind))) {
+                winningsFactor = Hand.DW_FOUR_OF_A_KIND_PAYOFF;
+            } else if (winningText.equals(getString(R.string.full_house))) {
+                winningsFactor = Hand.DW_FULL_HOUSE_PAYOFF;
+            } else if (winningText.equals(getString(R.string.flush))) {
+                winningsFactor = Hand.DW_FLUSH_PAYOFF;
+            } else if (winningText.equals(getString(R.string.straight))) {
+                winningsFactor = Hand.DW_STRAIGHT_FLUSH_PAYOFF;
+            } else if (winningText.equals(getString(R.string.three_kind))) {
+                winningsFactor = Hand.DW_THREE_OF_A_KIND_PAYOFF;
+            } else {
+                winningsFactor = 0;
+            }
+
+        } else if (gameSelected.equals(getString(R.string.jacks_or_better))) {
+            if (winningText.equals(R.string.royal_flush)) {
+                winningsFactor = Hand.JOB_ROYAL_FLUSH_PAYOFF;
+            } else if (winningText.equals(getString(R.string.straight_flush))) {
+                winningsFactor = Hand.JOB_STRAIGHT_FLUSH_PAYOFF;
+            } else if (winningText.equals(getString(R.string.four_kind))) {
+                winningsFactor = Hand.JOB_FOUR_OF_A_KIND_PAYOFF;
+            } else if (winningText.equals(getString(R.string.full_house))) {
+                winningsFactor = Hand.JOB_FULL_HOUSE_PAYOFF;
+            } else if (winningText.equals(getString(R.string.flush))) {
+                winningsFactor = Hand.JOB_FLUSH_PAYOFF;
+            } else if (winningText.equals(getString(R.string.straight))) {
+                winningsFactor = Hand.JOB_STRAIGHT_PAYOFF;
+            } else if (winningText.equals(getString(R.string.three_kind))) {
+                winningsFactor = Hand.JOB_THREE_OF_A_KIND_PAYOFF;
+            } else if (winningText.equals(getString(R.string.two_pair))) {
+                winningsFactor = Hand.JOB_TWO_PAIR_PAYOFF;
+            } else if (winningText.equals(getString(R.string.jacks_or_better))) {
+                winningsFactor = Hand.JOB_JACKS_OR_BETTER_PAYOFF;
+            } else {
+                winningsFactor = 0;
+            }
+        }
+        int payoff = bet * winningsFactor;
+        wallet = wallet + (payoff);
+        walletAmountText.setText(String.format(Locale.US, "%d", wallet));
+        if (payoff > 0) {
+            Toast.makeText(getApplication(), "You win $" + payoff + "!!!",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 }

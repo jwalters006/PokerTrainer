@@ -14,6 +14,29 @@ import java.util.List;
 
 final class Hand {
 
+    public static final int JOB_ROYAL_FLUSH_PAYOFF = 976;
+    public static final int JOB_STRAIGHT_FLUSH_PAYOFF = 50;
+    public static final int JOB_FOUR_OF_A_KIND_PAYOFF = 25;
+    public static final int JOB_FULL_HOUSE_PAYOFF = 9;
+    public static final int JOB_FLUSH_PAYOFF = 6;
+    public static final int JOB_STRAIGHT_PAYOFF = 4;
+    public static final int JOB_THREE_OF_A_KIND_PAYOFF = 3;
+    public static final int JOB_TWO_PAIR_PAYOFF = 2;
+    public static final int JOB_JACKS_OR_BETTER_PAYOFF = 1;
+
+    public static final int DW_NATURAL_ROYAL_FLUSH_PAYOFF = 800;
+    public static final int DW_FOUR_DEUCES_PAYOFF = 200;
+    public static final int DW_WILD_ROYAL_FLUSH_PAYOFF = 25;
+    public static final int DW_FIVE_OF_A_KIND_PAYOFF = 15;
+    public static final int DW_STRAIGHT_FLUSH_PAYOFF = 9;
+    public static final int DW_FOUR_OF_A_KIND_PAYOFF = 5;
+    public static final int DW_FULL_HOUSE_PAYOFF = 3;
+    public static final int DW_FLUSH_PAYOFF = 2;
+    public static final int DW_STRAIGHT_PAYOFF = 2;
+    public static final int DW_THREE_OF_A_KIND_PAYOFF = 1;
+
+
+
     static List<String> handAsStringList(List<Card> hand) {
         List<String> handAsStringList = new ArrayList<>();
         for (Card card : hand) {
