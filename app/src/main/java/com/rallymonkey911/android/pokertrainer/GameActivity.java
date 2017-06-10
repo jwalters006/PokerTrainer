@@ -20,7 +20,7 @@ import java.util.Random;
 
 public class GameActivity extends AppCompatActivity
         implements ChangeBetDialogFragment.ChangeBetDialogListener {
-//TODO Fix GameActivity landscape layout
+    //TODO Fix GameActivity landscape layout
     Context context;
 
     // Declare all ImageView objects in the layout
@@ -70,7 +70,13 @@ public class GameActivity extends AppCompatActivity
     // TODO implement code to save state on orientation change
     private static final String STATE_PLAYER_HAND = "playerHand";
     private static final String STATE_GAME_SELECTED = "gameSelected";
+    private static final String STATE_DECK_LIST_COPY = "deckListCopy";
+    private static final String STATE_WALLET = "currentWallet";
+    private static final String STATE_BET = "currentBet";
+
     private static final int HAND_SIZE = 5;
+    private static final int STARTING_WALLET = 500;
+    private static final int STARTING_BET = 100;
     private static final float VISIBLE_FLOAT_VALUE = 1.00f;
     private static final float SEMI_VISIBLE_FLOAT_VALUE = 0.25f;
 
@@ -78,6 +84,10 @@ public class GameActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        // Declare and initialize fragment manager and fragment for bet dialog
+        final ChangeBetDialogFragment fragment = new ChangeBetDialogFragment();
+        final FragmentManager fragmentManager = getSupportFragmentManager();
 
         context = this;
         rand = new Random();
@@ -163,6 +173,14 @@ public class GameActivity extends AppCompatActivity
         gameHintCardHoldTextViews[2] = gameHintCardHoldText3;
         gameHintCardHoldTextViews[3] = gameHintCardHoldText4;
         gameHintCardHoldTextViews[4] = gameHintCardHoldText5;
+
+        // Set up starting values for bet and wallet, and the TextViews displaying them
+        bet = STARTING_BET;
+        wallet = STARTING_WALLET;
+        betText.setText(R.string.bet);
+        walletText.setText(R.string.wallet);
+        betAmountText.setText(String.format(Locale.US, "%d", bet));
+        walletAmountText.setText(String.format(Locale.US, "%d", wallet));
 
         // Set the OnClickListener for the five ImageViews representing the current hand
         for (ImageView imageView : new ImageView[]{gameCardImageView1, gameCardImageView2,
@@ -291,6 +309,14 @@ public class GameActivity extends AppCompatActivity
             }
         });
 
+        // Set the click listener for the Bet button
+        betButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment.show(fragmentManager, "betFragment");
+            }
+        });
+
         // Set response for RadioButton's via RadioGroup listener
         gameChoiceRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -309,39 +335,17 @@ public class GameActivity extends AppCompatActivity
         // Set default selection of game to "Jacks or Better" via RadioButton selection
         gameChoiceRadioGroup.check(R.id.game_radio_button_jacks);
 
-        // Set up game so that deal is not selectable after hand is drawn
-        toggleViewClickability(dealButton);
-
         // Create copy of initial hand and set this aside for the hint row
         hintHand = new ArrayList<>(hand);
 
-        bet = 100;
-        wallet = 500;
-        if (betText != null &&
-                walletText != null &&
-                betAmountText != null &&
-                walletAmountText != null) {
-            betText.setText(R.string.bet);
-            walletText.setText(R.string.wallet);
-            betAmountText.setText(String.format(Locale.US, "%d", bet));
-            walletAmountText.setText(String.format(Locale.US, "%d", wallet));
-        }
-
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-
-        betButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ChangeBetDialogFragment fragment = new ChangeBetDialogFragment();
-                fragment.show(fragmentManager, "betFragment");
-            }
-        });
-
-        betButton.performClick();
+        // Disable certain buttons at very start of game
         toggleViewClickability(drawButton);
+        toggleViewClickability(dealButton);
         toggleViewClickability(dealButton);
         toggleViewClickability(hintButton);
 
+        // Start game with a prompt to accept a betting amount
+        betButton.performClick();
     }
 
     @Override

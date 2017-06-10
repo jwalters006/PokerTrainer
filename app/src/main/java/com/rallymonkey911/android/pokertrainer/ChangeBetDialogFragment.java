@@ -23,6 +23,7 @@ public class ChangeBetDialogFragment extends DialogFragment {
     GameActivity gameActivity;
 
     static final int MINIMUM_BET = 10;
+    static final int MAXIMUM_BET = 500;
 
     /* The activity that creates an instance of this dialog fragment must
     implement this interface in order to receive event callbacks.
@@ -102,7 +103,7 @@ public class ChangeBetDialogFragment extends DialogFragment {
     }
 
     public void incrementBet() {
-        if (bet < wallet) {
+        if (bet < wallet && bet < MAXIMUM_BET) {
             bet = bet + MINIMUM_BET;
         }
         betTextView.setText(String.valueOf(bet));

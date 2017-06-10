@@ -26,6 +26,48 @@
 
     </RadioGroup>
 
+    <RelativeLayout
+        android:id="@+id/bet_wallet_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:id="@+id/wallet_amount_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="80dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/wallet_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/wallet_amount_text"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/bet_amount_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="24dp"
+            android:layout_toLeftOf="@id/wallet_text"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/bet_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/bet_amount_text"
+            android:textStyle="bold" />
+
+
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/button_parent"
         android:layout_width="match_parent"
@@ -50,6 +92,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/show_hint" />
+
+        <Button
+            android:id="@+id/bet_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bet_button" />
 
     </LinearLayout>
 
@@ -116,7 +164,6 @@
             android:background="@android:color/darker_gray" />
 
 
-
         <LinearLayout
             android:id="@+id/game_hint_card_parent"
             android:layout_width="0dp"
@@ -178,8 +225,8 @@
         <LinearLayout
             android:id="@+id/game_card_hold_parent"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <TextView
@@ -233,9 +280,9 @@
         <LinearLayout
             android:id="@+id/game_hint_card_hold_parent"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_above="@id/game_hint_card_parent"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <TextView

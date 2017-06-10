@@ -154,14 +154,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="80dp" />
+            android:layout_marginLeft="80dp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/bet_amount_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@id/bet_text" />
+            android:layout_toRightOf="@id/bet_text"
+            android:textColor="#004D40"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/wallet_amount_text"
@@ -169,13 +172,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="80dp" />
+            android:layout_marginRight="80dp"
+            android:textColor="#004D40"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/wallet_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/wallet_amount_text" />
+            android:layout_toLeftOf="@id/wallet_amount_text"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 
