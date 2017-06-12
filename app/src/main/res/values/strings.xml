@@ -46,7 +46,4 @@
         card is selected</string>
     <string name="cards_selected_plural"><xliff:g example="2" id="count">%d</xliff:g>
          cards are selected</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

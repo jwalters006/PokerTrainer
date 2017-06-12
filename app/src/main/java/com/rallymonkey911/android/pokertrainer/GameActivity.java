@@ -31,10 +31,9 @@ public class GameActivity extends AppCompatActivity
 
     // Declare all TextView objects in the layout
     public TextView gameCardHoldText1, gameCardHoldText2, gameCardHoldText3,
-            gameCardHoldText4, gameCardHoldText5, gameHandText, gameHintCardHoldText1,
-            gameHintCardHoldText2, gameHintCardHoldText3, gameHintCardHoldText4,
-            gameHintCardHoldText5, gameHintHandText, betText, betAmountText, walletText,
-            walletAmountText;
+            gameCardHoldText4, gameCardHoldText5, gameHintCardHoldText1, gameHintCardHoldText2,
+            gameHintCardHoldText3, gameHintCardHoldText4, gameHintCardHoldText5, gameHandText,
+            gameHintHandText, betText, betAmountText, walletText, walletAmountText;
     TextView[] gameCardHoldTextViews, gameHintCardHoldTextViews;
 
     boolean[] isHold = new boolean[HAND_SIZE];
@@ -65,14 +64,19 @@ public class GameActivity extends AppCompatActivity
     // Declare variable to hold reference to selected game
     private String gameSelected;
 
-    private boolean isHintShown;
+    private boolean isHintShown, isReadyToDeal;
 
     // TODO implement code to save state on orientation change
+    private static final String STATE_GAME_HAND_TEXT = "gameHandText";
+    private static final String STATE_GAME_HINT_HAND_TEXT = "gameHintHandText";
     private static final String STATE_PLAYER_HAND = "playerHand";
+    private static final String STATE_PLAYER_HINT_HAND = "playerHintHand";
     private static final String STATE_GAME_SELECTED = "gameSelected";
     private static final String STATE_DECK_LIST_COPY = "deckListCopy";
     private static final String STATE_WALLET = "currentWallet";
     private static final String STATE_BET = "currentBet";
+    private static final String STATE_WAITING_ON_DEAL = "waitingOnDeal";
+    private static final String STATE_GAME_HINT_HOLD_VIEWS = "gameHintHoldViews";
 
     private static final int HAND_SIZE = 5;
     private static final int STARTING_WALLET = 500;
@@ -238,8 +242,8 @@ public class GameActivity extends AppCompatActivity
                     betAmountText.setText(String.format(Locale.US, "%d", bet));
                 }
                 if (wallet <= 0) {
-                    wallet = 500;
-                    bet = 100;
+                    wallet = STARTING_WALLET;
+                    bet = STARTING_BET;
                     walletAmountText.setText(String.format(Locale.US, "%d", wallet));
                     betAmountText.setText(String.format(Locale.US, "%d", bet));
                     Toast.makeText(getApplication(), R.string.wallet_reset,
@@ -344,8 +348,86 @@ public class GameActivity extends AppCompatActivity
         toggleViewClickability(dealButton);
         toggleViewClickability(hintButton);
 
-        // Start game with a prompt to accept a betting amount
-        betButton.performClick();
+        // Recover state of all objects if the activity is restarted
+        if (savedInstanceState != null) {
+            hand = (ArrayList<Card>) savedInstanceState.getSerializable(
+                    STATE_PLAYER_HAND);
+            hintHand = (ArrayList<Card>) savedInstanceState.getSerializable(
+                    STATE_PLAYER_HINT_HAND);
+            deckListCopy = (ArrayList<Card>) savedInstanceState.getSerializable(
+                    STATE_DECK_LIST_COPY);
+
+            gameSelected = savedInstanceState.getString(STATE_GAME_SELECTED);
+            if (gameSelected == getString(R.string.jacks_or_better)) {
+                gameChoiceRadioGroup.check(R.id.lookup_radio_button_jacks);
+            } else if (gameSelected == getString(R.string.deuces_wild)) {
+                gameChoiceRadioGroup.check(R.id.lookup_radio_button_deuces);
+            }
+
+            wallet = savedInstanceState.getInt(STATE_WALLET);
+            bet = savedInstanceState.getInt(STATE_BET);
+            walletAmountText.setText(String.format(Locale.US, "%d", wallet));
+            betAmountText.setText(String.format(Locale.US, "%d", bet));
+
+            if (hand.size() <= 0) {
+                return;
+            }
+
+            gameHandText.setText(savedInstanceState.getString(STATE_GAME_HAND_TEXT));
+            gameHintHandText.setText(savedInstanceState.getString(STATE_GAME_HINT_HAND_TEXT));
+
+            isReadyToDeal = savedInstanceState.getBoolean(STATE_WAITING_ON_DEAL);
+
+            int[] isHintHold = savedInstanceState.getIntArray(STATE_GAME_HINT_HOLD_VIEWS);
+
+            for (int i = 0; i < HAND_SIZE; i++) {
+                gameCardImageViews[i].setImageResource(hand.get(i).getmResourceIdFull());
+                gameCardImageViews[i].setClickable(true);
+            }
+
+            if (!isReadyToDeal) {
+                toggleViewClickability(drawButton);
+                toggleViewClickability(dealButton);
+                toggleViewClickability(hintButton);
+                toggleViewClickability(betButton);
+                toggleViewClickability(radioButtonJacks);
+                toggleViewClickability(radioButtonDeuces);
+                hintHand = new ArrayList<>(hand);
+            } else {
+                gameHintHandText.setVisibility(View.VISIBLE);
+                for (int i = 0; i < HAND_SIZE; i++) {
+                    gameCardImageViews[i].setClickable(false);
+                    gameHintCardImageViews[i].setImageResource(
+                            hintHand.get(i).getmResourceIdFull());
+                    if (isHintHold[i] == View.VISIBLE) {
+                        gameHintCardHoldTextViews[i].setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        } else {
+            // Start game with a prompt to accept a betting amount
+            betButton.performClick();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STATE_BET, bet);
+        outState.putInt(STATE_WALLET, wallet);
+        outState.putString(STATE_GAME_SELECTED, gameSelected);
+        outState.putString(STATE_GAME_HAND_TEXT, gameHandText.getText().toString());
+        outState.putString(STATE_GAME_HINT_HAND_TEXT, gameHintHandText.getText().toString());
+        outState.putSerializable(STATE_DECK_LIST_COPY, deckListCopy);
+        outState.putSerializable(STATE_PLAYER_HAND, hand);
+        outState.putSerializable(STATE_PLAYER_HINT_HAND, hintHand);
+        outState.putBoolean(STATE_WAITING_ON_DEAL, dealButton.isClickable());
+        int[] isHintHold = new int[HAND_SIZE];
+
+        for (int i = 0; i < HAND_SIZE; i++) {
+            isHintHold[i] = gameHintCardHoldTextViews[i].getVisibility();
+        }
+        outState.putIntArray(STATE_GAME_HINT_HOLD_VIEWS, isHintHold);
     }
 
     @Override
