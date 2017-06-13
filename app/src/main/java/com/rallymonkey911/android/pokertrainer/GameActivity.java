@@ -2,6 +2,8 @@ package com.rallymonkey911.android.pokertrainer;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.support.annotation.IdRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -24,6 +26,44 @@ public class GameActivity extends AppCompatActivity
     //TODO Fix GameActivity landscape layout
     Context context;
 
+    /** Handles playback of all the sound files */
+    private MediaPlayer mMediaPlayer;
+    /**
+     * Handles management of the audio focus
+     */
+    private AudioManager mAudioManager;
+
+    /**
+     * Create instance of OnCompletionListener and implement callback method to respond when
+     * the app is closed or minimized.
+     */
+    private MediaPlayer.OnCompletionListener mCompletionListener
+            = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            releaseMediaPlayer();
+        }
+    };
+
+    /**
+     * Create instance of OnAudioFocusChangeListener and implement callback method to respond
+     * when the audio focus changes in the Android system.
+     */
+    private AudioManager.OnAudioFocusChangeListener mAudioFocusChangeListener =
+            new AudioManager.OnAudioFocusChangeListener() {
+                @Override
+                public void onAudioFocusChange(int focusChange) {
+                    if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ||
+                            focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                        mMediaPlayer.pause();
+                        mMediaPlayer.seekTo(0);
+                    } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                        releaseMediaPlayer();
+                    } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                        mMediaPlayer.start();
+                    }
+                }
+            };
 
 
     // Declare all ImageView objects in the layout
@@ -93,7 +133,8 @@ public class GameActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-
+        // Create and setup the AudioManager to request audio focus.
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         // Declare and initialize fragment manager and fragment for bet dialog
         final ChangeBetDialogFragment fragment = new ChangeBetDialogFragment();
@@ -299,6 +340,7 @@ public class GameActivity extends AppCompatActivity
                 toggleViewClickability(dealButton);
                 toggleViewClickability(hintButton);
                 toggleViewClickability(betButton);
+                playSound(R.raw.card_slide8);
             }
         });
 
@@ -329,6 +371,7 @@ public class GameActivity extends AppCompatActivity
         betButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                playSound(R.raw.chips_handle1);
                 fragment.show(fragmentManager, "betFragment");
             }
         });
@@ -449,12 +492,17 @@ public class GameActivity extends AppCompatActivity
         SharedPreferences.Editor editor = savedWallet.edit();
         editor.putInt(SAVED_WALLET, wallet);
         editor.commit();
+
+        // When the activity is stopped, release the media player resources because we won't
+        // be playing any more sounds.
+        releaseMediaPlayer();
     }
 
     @Override
     public void onDialogPositiveClick(int betToChangeTo) {
         bet = betToChangeTo;
         betAmountText.setText(String.valueOf(bet));
+        playSound(R.raw.chips_handle6);
     }
 
     @Override
@@ -583,6 +631,11 @@ public class GameActivity extends AppCompatActivity
         if (payoff > 0) {
             Toast.makeText(getApplication(), "You win $" + payoff + "!!!",
                     Toast.LENGTH_SHORT).show();
+            playSound(R.raw.card_place4);
+        } else {
+            Toast.makeText(getApplication(), "You lose your $" + bet + " bet",
+                    Toast.LENGTH_SHORT).show();
+            playSound(R.raw.impacts_soft_short_crack);
         }
     }
 
@@ -594,5 +647,40 @@ public class GameActivity extends AppCompatActivity
         Toast.makeText(getApplication(),
                 R.string.wallet_reset,
                 Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Clean up the media player by releasing its resources.
+     */
+    private void releaseMediaPlayer() {
+        // If the media player is not null, then it may be currently playing a sound.
+        if (mMediaPlayer != null) {
+            // Regardless of the current state of the media player, release its resources
+            // because we no longer need it.
+            mMediaPlayer.release();
+            // Set the media player back to null. For our code, we've decided that
+            // setting the media player to null is an easy way to tell that the media player
+            // is not configured to play an audio file at the moment.
+            mMediaPlayer = null;
+            // Abandon audio focus and unregister the AudioFocusChangeListener.
+            mAudioManager.abandonAudioFocus(mAudioFocusChangeListener);
+        }
+    }
+
+    private void playSound(int soundFileId) {
+        int result = mAudioManager.requestAudioFocus(mAudioFocusChangeListener,
+                AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            // Create and setup the {@link MediaPlayer} for the audio resource associated
+            // with the current word.
+            mMediaPlayer = MediaPlayer.create(this,
+                    soundFileId);
+            // Start the audio file.
+            mMediaPlayer.start();
+            // Setup a listener on the media player, so that we can stop and release the
+            // media player once the sound has finished playing.
+            mMediaPlayer.setOnCompletionListener(mCompletionListener);
+        }
     }
 }
