@@ -502,7 +502,7 @@ public class GameActivity extends AppCompatActivity
         // the keys to this HashMap, and will pair with corresponding value, which is a String
         // representing the optimal choices of cards to hold.
         new PokerAsyncTask(this, gameHintHandText, handToLookup, gameHintCardHoldTextViews,
-                gameSelected).execute(Hand.sortedTomHandString(hand));
+                gameSelected).execute(Hand.sortedTomHandString(handToLookup));
     }
 
     private void hideHintCardImageViews() {
