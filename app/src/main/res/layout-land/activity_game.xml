@@ -341,7 +341,6 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/game_and_hint_hold_parent"
         android:layout_centerHorizontal="true"
-        android:text="@string/default_game_hand_text"
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold" />

@@ -1,6 +1,7 @@
 package com.rallymonkey911.android.pokertrainer;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.IdRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +23,8 @@ public class GameActivity extends AppCompatActivity
         implements ChangeBetDialogFragment.ChangeBetDialogListener {
     //TODO Fix GameActivity landscape layout
     Context context;
+
+
 
     // Declare all ImageView objects in the layout
     private ImageView gameCardImageView1, gameCardImageView2, gameCardImageView3, gameCardImageView4,
@@ -77,6 +80,7 @@ public class GameActivity extends AppCompatActivity
     private static final String STATE_BET = "currentBet";
     private static final String STATE_WAITING_ON_DEAL = "waitingOnDeal";
     private static final String STATE_GAME_HINT_HOLD_VIEWS = "gameHintHoldViews";
+    private static final String SAVED_WALLET = "savedWallet";
 
     private static final int HAND_SIZE = 5;
     private static final int STARTING_WALLET = 500;
@@ -88,6 +92,8 @@ public class GameActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+
 
         // Declare and initialize fragment manager and fragment for bet dialog
         final ChangeBetDialogFragment fragment = new ChangeBetDialogFragment();
@@ -178,9 +184,10 @@ public class GameActivity extends AppCompatActivity
         gameHintCardHoldTextViews[3] = gameHintCardHoldText4;
         gameHintCardHoldTextViews[4] = gameHintCardHoldText5;
 
-        // Set up starting values for bet and wallet, and the TextViews displaying them
+        // Set up values for bet and wallet, and the TextViews displaying them
+        SharedPreferences savedWallet = getPreferences(0);
         bet = STARTING_BET;
-        wallet = STARTING_WALLET;
+        wallet = savedWallet.getInt(SAVED_WALLET, STARTING_WALLET);
         betText.setText(R.string.bet);
         walletText.setText(R.string.wallet);
         betAmountText.setText(String.format(Locale.US, "%d", bet));
@@ -428,6 +435,15 @@ public class GameActivity extends AppCompatActivity
             isHintHold[i] = gameHintCardHoldTextViews[i].getVisibility();
         }
         outState.putIntArray(STATE_GAME_HINT_HOLD_VIEWS, isHintHold);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences savedWallet = getPreferences(0);
+        SharedPreferences.Editor editor = savedWallet.edit();
+        editor.putInt(SAVED_WALLET, wallet);
+        editor.commit();
     }
 
     @Override
