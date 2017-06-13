@@ -186,8 +186,18 @@ public class GameActivity extends AppCompatActivity
 
         // Set up values for bet and wallet, and the TextViews displaying them
         SharedPreferences savedWallet = getPreferences(0);
-        bet = STARTING_BET;
         wallet = savedWallet.getInt(SAVED_WALLET, STARTING_WALLET);
+
+        if (wallet < fragment.getMinimumBet()) {
+            resetWalletAndBet();
+        }
+
+        if (wallet < STARTING_BET) {
+            bet = wallet;
+        } else {
+            bet = STARTING_BET;
+        }
+
         betText.setText(R.string.bet);
         walletText.setText(R.string.wallet);
         betAmountText.setText(String.format(Locale.US, "%d", bet));
@@ -249,12 +259,7 @@ public class GameActivity extends AppCompatActivity
                     betAmountText.setText(String.format(Locale.US, "%d", bet));
                 }
                 if (wallet <= 0) {
-                    wallet = STARTING_WALLET;
-                    bet = STARTING_BET;
-                    walletAmountText.setText(String.format(Locale.US, "%d", wallet));
-                    betAmountText.setText(String.format(Locale.US, "%d", bet));
-                    Toast.makeText(getApplication(), R.string.wallet_reset,
-                            Toast.LENGTH_SHORT).show();
+                    resetWalletAndBet();
                 }
                 gameHandText.setText(winningText);
                 toggleViewClickability(drawButton);
@@ -579,5 +584,15 @@ public class GameActivity extends AppCompatActivity
             Toast.makeText(getApplication(), "You win $" + payoff + "!!!",
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void resetWalletAndBet() {
+        wallet = STARTING_WALLET;
+        bet = STARTING_BET;
+        walletAmountText.setText(String.format(Locale.US, "%d", wallet));
+        betAmountText.setText(String.format(Locale.US, "%d", bet));
+        Toast.makeText(getApplication(),
+                R.string.wallet_reset,
+                Toast.LENGTH_SHORT).show();
     }
 }

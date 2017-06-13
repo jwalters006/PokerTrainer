@@ -115,4 +115,8 @@ public class ChangeBetDialogFragment extends DialogFragment {
         }
         betTextView.setText(String.valueOf(bet));
     }
+
+    public int getMinimumBet() {
+        return MINIMUM_BET;
+    }
 }
