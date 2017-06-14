@@ -2,13 +2,14 @@ package com.rallymonkey911.android.pokertrainer;
 
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
  * Created by jeff on 3/24/2017.
  */
 
-public class Card implements Comparable<Card> {
+public class Card implements Comparable<Card>, Serializable {
 
     /** The value of the card (e.g., SEVEN) */
     private final int mRank;
