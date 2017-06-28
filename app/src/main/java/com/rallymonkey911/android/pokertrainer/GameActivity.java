@@ -595,7 +595,7 @@ public class GameActivity extends AppCompatActivity
             } else if (winningText.equals(getString(R.string.flush))) {
                 winningsFactor = Hand.DW_FLUSH_PAYOFF;
             } else if (winningText.equals(getString(R.string.straight))) {
-                winningsFactor = Hand.DW_STRAIGHT_FLUSH_PAYOFF;
+                winningsFactor = Hand.DW_STRAIGHT_PAYOFF;
             } else if (winningText.equals(getString(R.string.three_kind))) {
                 winningsFactor = Hand.DW_THREE_OF_A_KIND_PAYOFF;
             } else {
@@ -603,7 +603,7 @@ public class GameActivity extends AppCompatActivity
             }
 
         } else if (gameSelected.equals(getString(R.string.jacks_or_better))) {
-            if (winningText.equals(R.string.royal_flush)) {
+            if (winningText.equals(getString(R.string.royal_flush))) {
                 winningsFactor = Hand.JOB_ROYAL_FLUSH_PAYOFF;
             } else if (winningText.equals(getString(R.string.straight_flush))) {
                 winningsFactor = Hand.JOB_STRAIGHT_FLUSH_PAYOFF;
